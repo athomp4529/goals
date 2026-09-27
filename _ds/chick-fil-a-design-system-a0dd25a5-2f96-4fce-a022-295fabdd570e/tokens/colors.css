@@ -1,0 +1,70 @@
+/* ── Chick-fil-A Color System ──────────────────────────────────
+   Source of truth: Visual Identity Standards color swatches (RGB master).
+   Base palette = raw brand swatches. Semantic aliases follow below. */
+:root{
+  /* Primary */
+  --cfa-red:#DD0033;            /* PMS 186 C — the signature red */
+  --cfa-white:#FFFFFF;
+  --cfa-navy:#004F71;           /* PMS 3025 C */
+  --cfa-dark-red:#940929;       /* PMS 1955 C */
+
+  /* Neutrals */
+  --cfa-dark-gray:#5B6770;      /* PMS 431 C */
+  --cfa-gray:#DAD7D2;           /* PMS 2330 C */
+  --cfa-light-gray:#EEEDEB;     /* PMS Cool Gray 1 C */
+
+  /* Secondary — Blue family */
+  --cfa-blue:#3EB1C8;           /* PMS 631 C */
+  --cfa-light-blue:#A7CED8;     /* PMS 2204 C */
+
+  /* Secondary — Red / warm */
+  --cfa-bright-red:#FF1138;     /* PMS 185 C */
+  --cfa-orange:#E35205;         /* PMS 166 C */
+  --cfa-light-orange:#FA9370;   /* PMS 2023 C */
+  --cfa-pink:#F8C1B8;           /* PMS 2337 C */
+
+  /* Secondary — Green family */
+  --cfa-dark-green:#00635B;     /* PMS 7720 C */
+  --cfa-green:#249E6B;          /* PMS 2417 C */
+  --cfa-light-green:#B3CFAE;    /* PMS 2260 C */
+
+  /* Secondary — Yellow / cream */
+  --cfa-yellow:#FFB549;         /* PMS 1365 C */
+  --cfa-light-yellow:#F5E1A4;   /* PMS 7401 C */
+  --cfa-cream:#FCF7E7;          /* soft off-white background */
+
+  /* Secondary — Purple family */
+  --cfa-dark-purple:#5D3754;    /* PMS 7659 C */
+  --cfa-purple:#994878;         /* PMS 682 C */
+
+  /* ── Semantic aliases ── */
+  --color-brand:var(--cfa-red);
+  --color-brand-hover:var(--cfa-dark-red);
+  --color-brand-active:#7d0722;          /* darker than dark-red for press */
+
+  --text-primary:#1A1A1A;                /* near-black body text */
+  --text-secondary:var(--cfa-dark-gray);
+  --text-muted:#8A9299;                  /* lighter dark-gray */
+  --text-on-brand:var(--cfa-white);
+  --text-link:var(--cfa-red);
+  --text-link-hover:var(--cfa-dark-red);
+
+  --surface-page:var(--cfa-white);
+  --surface-cream:var(--cfa-cream);
+  --surface-card:var(--cfa-white);
+  --surface-subtle:var(--cfa-light-gray);
+  --surface-muted:var(--cfa-gray);
+  --surface-brand:var(--cfa-red);
+  --surface-navy:var(--cfa-navy);
+
+  --border-subtle:var(--cfa-light-gray);
+  --border-default:var(--cfa-gray);
+  --border-strong:var(--cfa-dark-gray);
+
+  --focus-ring:var(--cfa-blue);
+
+  --success:var(--cfa-green);
+  --info:var(--cfa-blue);
+  --warning:var(--cfa-yellow);
+  --danger:var(--cfa-red);
+}
