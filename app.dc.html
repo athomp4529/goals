@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/chick-fil-a-design-system-a0dd25a5-2f96-4fce-a022-295fabdd570e/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/chick-fil-a-design-system-a0dd25a5-2f96-4fce-a022-295fabdd570e/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/chick-fil-a-design-system-a0dd25a5-2f96-4fce-a022-295fabdd570e/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/chick-fil-a-design-system-a0dd25a5-2f96-4fce-a022-295fabdd570e/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/chick-fil-a-design-system-a0dd25a5-2f96-4fce-a022-295fabdd570e/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/chick-fil-a-design-system-a0dd25a5-2f96-4fce-a022-295fabdd570e/tokens/base.css">
+  <link rel="stylesheet" href="_ds/chick-fil-a-design-system-a0dd25a5-2f96-4fce-a022-295fabdd570e/styles.css">
+  <script src="_ds/chick-fil-a-design-system-a0dd25a5-2f96-4fce-a022-295fabdd570e/_ds_bundle.js"></script>
+  <script src="config.js"></script>
+  <title>Ft. Totten Goal Planning</title>
+  <style>
+    body{margin:0;background:#FCF7E7;}
+    a{color:#DD0033;} a:hover{color:#940929;}
+    @media print{[data-noprint]{display:none !important;} body{background:#fff;} [data-printsheet]{box-shadow:none !important;border:none !important;padding:0 !important;}}
+  </style>
+</helmet>
+<div style="min-height:100vh;font-family:var(--font-sans);color:var(--text-primary);background:var(--cfa-cream)">
+  <sc-if value="{{ showGate }}" hint-placeholder-val="{{ true }}">
+    <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:var(--cfa-red)">
+      <div style="width:100%;max-width:420px;box-sizing:border-box;background:#fff;border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);padding:40px 36px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center">
+        <img src="assets/cfa-script-red.png" alt="Chick-fil-A" style="height:40px;width:auto">
+        <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">Ft. Totten</span>
+        <h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-0.02em">Goal Planning</h1>
+        <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-secondary);text-wrap:pretty">{{ gateText }}</p>
+        <div ref="{{ gsiRef }}" style="min-height:44px;display:flex;justify-content:center"></div>
+        <sc-if value="{{ hasAuthError }}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:14px;line-height:1.5;color:var(--cfa-red)">{{ authError }}</p></sc-if>
+        <sc-if value="{{ isDenied }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="secondary" onClick="{{ signOut }}" hint-size="220px,44px">Use a Different Account</x-import>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ isReady }}" hint-placeholder-val="{{ false }}">
+  <div>
+  <header data-noprint="" style="background:var(--cfa-red);color:#fff">
+    <div style="max-width:1120px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <img src="assets/cfa-script-white.png" alt="Chick-fil-A" style="height:34px;width:auto;display:block">
+      <div style="display:flex;flex-direction:column;gap:2px;border-left:1px solid rgba(255,255,255,.35);padding-left:20px">
+        <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase">Ft. Totten</span>
+        <span style="font-size:18px;font-weight:700;letter-spacing:-0.01em">{{ year }} Goal Planning</span>
+      </div>
+      <div style="flex:1"></div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <span style="font-size:13px">{{ saving }}</span>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+          <span style="font-size:14px;font-weight:500">{{ userName }}</span>
+          <span style="font-size:12px">{{ userRoleLine }}</span>
+        </div>
+        <button onClick="{{ signOut }}" style="font-family:var(--font-sans);font-size:14px;font-weight:500;border:none;border-radius:999px;padding:8px 16px;cursor:pointer;background:rgba(255,255,255,.18);color:#fff">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <div data-noprint="" style="background:#fff;border-bottom:1px solid var(--border-subtle)">
+    <div style="max-width:1120px;margin:0 auto;padding:12px 24px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tabs" items="{{ tabItems }}" value="{{ view }}" onChange="{{ setView }}" hint-size="360px,44px"></x-import>
+      <span style="font-size:13px;color:var(--text-secondary);padding-bottom:14px">Plans due {{ dueFmt }}</span>
+    </div>
+  </div>
+
+  <main style="max-width:1120px;margin:0 auto;padding:32px 24px 96px;display:flex;flex-direction:column;gap:24px">
+
+    <!-- ============ LEADER: WHY WE PLAN ============ -->
+    <sc-if value="{{ isWhy }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:32px">
+        <div style="display:flex;flex-direction:column;gap:10px;max-width:760px">
+          <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">Planning guide</span>
+          <h1 style="margin:0;font-size:36px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Why we plan the way we do</h1>
+          <p style="margin:0;font-size:17px;line-height:1.55;color:var(--text-secondary);text-wrap:pretty">Ten areas run this restaurant. The Operator sets 2–4 big goals for the year. Directors turn those goals into priorities and assign them to each area. You build out the priorities assigned to you, and you can add one of your own. When every area works toward the same goals, guests feel it. This page explains each step of the plan.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <h2 style="margin:0;font-size:22px;font-weight:700;letter-spacing:-0.02em">The Operator's {{ year }} goals</h2>
+            <span style="font-size:14px;color:var(--text-secondary)">The big results we're working toward this year. Every priority supports at least one.</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+            <sc-for list="{{ goalCards }}" as="g" hint-placeholder-count="3">
+              <div style="background:#fff;border:1px solid var(--border-subtle);border-top:4px solid var(--cfa-red);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Goal {{ g.n }}</span>
+                <span style="font-size:18px;font-weight:700;line-height:1.3;text-wrap:pretty">{{ g.statement }}</span>
+                <span style="font-size:14px;color:var(--text-secondary)">{{ g.measure }}</span>
+                <span style="font-size:15px;font-weight:700;color:var(--cfa-red)">Target {{ g.target }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ goalsEmpty }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;color:var(--text-secondary)">The Operator hasn't shared the {{ year }} goals yet.</span></sc-if>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <h2 style="margin:0;font-size:22px;font-weight:700;letter-spacing:-0.02em">{{ year }} priorities</h2>
+            <span style="font-size:14px;color:var(--text-secondary)">Set by the Directors. Each lead area builds its priorities out in its plan.</span>
+          </div>
+          <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden">
+            <sc-for list="{{ priList }}" as="p" hint-placeholder-count="8">
+              <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr);gap:16px;padding:14px 20px;align-items:center;border-bottom:1px solid var(--border-subtle)">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">{{ p.name }}</span><span style="font-size:13px;color:var(--text-secondary)">{{ p.metric }}</span></div>
+                <span style="font-size:14px;font-weight:500;color:var(--cfa-navy)">{{ p.goals }}</span>
+                <span style="font-size:15px;font-weight:700;color:var(--cfa-red)">{{ p.target }}</span>
+                <span style="font-size:14px;color:var(--text-secondary)">{{ p.owner }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,300px">
+            <div style="display:flex;flex-direction:column;gap:14px;height:100%">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Step 1 · Reflect</span>
+              <span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">Start from what actually happened</span>
+              <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-secondary)">Goals built on real lessons fit your area. Include what went wrong as well as what went right. Both point to where your next goal should be.</p>
+              <div style="background:var(--cfa-cream);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;line-height:1.5"><strong style="font-weight:500">Good answer:</strong> "Adding a second order-taker at lunch cut DT departure from 52 to 44 seconds."</div>
+              <div style="margin-top:auto"><x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ goStep0 }}" hint-size="120px,32px">Go to Step 1</x-import></div>
+            </div>
+          </x-import>
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,300px">
+            <div style="display:flex;flex-direction:column;gap:14px;height:100%">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Step 2 · Priorities</span>
+              <span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">Turn each priority into a number</span>
+              <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-secondary)">Each priority supports one or more of the Operator's goals, so every area works toward the same results. A baseline, target and date turn it into something we can track and celebrate.</p>
+              <div style="background:var(--cfa-cream);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;line-height:1.5"><strong style="font-weight:500">Good answer:</strong> "Reduce DT departure time from 44 to 35 seconds by Sept 30, 2027."</div>
+              <div style="margin-top:auto"><x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ goStep1 }}" hint-size="120px,32px">Go to Step 2</x-import></div>
+            </div>
+          </x-import>
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,300px">
+            <div style="display:flex;flex-direction:column;gap:14px;height:100%">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Step 3 · Action plan</span>
+              <span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">Make it clear who does what, and when</span>
+              <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-secondary)">Actions with owners and dates get done. Quarterly milestones show a goal slipping in April instead of December. Naming the help you need from other areas lets them build it into their own plans.</p>
+              <div style="background:var(--cfa-cream);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;line-height:1.5"><strong style="font-weight:500">Good answer:</strong> "Weekly DT timer review in huddle — Shift Leaders — Jan 31."</div>
+              <div style="margin-top:auto"><x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ goStep2 }}" hint-size="120px,32px">Go to Step 3</x-import></div>
+            </div>
+          </x-import>
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,300px">
+            <div style="display:flex;flex-direction:column;gap:14px;height:100%">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Financial stewardship</span>
+              <span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">Show what the goal is worth</span>
+              <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-secondary)">A dollar estimate helps the Operator decide where to put time and budget. Only priorities that directly raise sales or lower costs need one. Show your math so the number can be checked.</p>
+              <div style="background:var(--cfa-cream);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;line-height:1.5"><strong style="font-weight:500">Good answer:</strong> "+3 cars per peak hour × $9.40 avg check × 2 peaks × 310 days ≈ $17,500."</div>
+              <div style="margin-top:auto"><x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ goStep2 }}" hint-size="120px,32px">Go to Step 3</x-import></div>
+            </div>
+          </x-import>
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,300px">
+            <div style="display:flex;flex-direction:column;gap:14px;height:100%">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Step 4 · Support</span>
+              <span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">Keep the team invested</span>
+              <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-secondary)">Team Members work harder toward results they can see and get recognized for. Deciding up front how you'll celebrate a milestone makes sure it happens, and a plan to sustain results keeps them from sliding back.</p>
+              <div style="background:var(--cfa-cream);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;line-height:1.5"><strong style="font-weight:500">Good answer:</strong> "Team lunch each time a quarterly DT milestone is hit."</div>
+              <div style="margin-top:auto"><x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ goStep3 }}" hint-size="120px,32px">Go to Step 4</x-import></div>
+            </div>
+          </x-import>
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,300px">
+            <div style="display:flex;flex-direction:column;gap:14px;height:100%">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Quarterly check-ins</span>
+              <span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">Keep the plan in use all year</span>
+              <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-secondary)">A plan written in December and never opened again changes nothing. A five-minute update each quarter shows what's working, flags what's stuck, and gives the Operator a chance to help early.</p>
+              <div style="background:var(--cfa-cream);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;line-height:1.5"><strong style="font-weight:500">When:</strong> First week of April, July, October and January.</div>
+              <div style="margin-top:auto"><x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ goCheckin }}" hint-size="140px,32px">Go to Check-in</x-import></div>
+            </div>
+          </x-import>
+        </div>
+
+        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="32px" hint-size="100%,900px">
+          <div style="display:flex;flex-direction:column;gap:28px">
+            <div style="display:flex;flex-direction:column;gap:6px;max-width:720px">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">How to</span>
+              <h2 style="margin:0;font-size:26px;font-weight:700;letter-spacing:-0.02em">Write a strong priority statement</h2>
+              <p style="margin:0;font-size:15px;line-height:1.55;color:var(--text-secondary);text-wrap:pretty">A priority statement is one sentence that says what will change, by how much and by when. Anyone on the team should be able to read it and know whether you hit it.</p>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <span style="font-size:16px;font-weight:700">The formula</span>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px">
+                <div style="display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:var(--radius-md);background:rgba(221,0,51,.06);border-top:3px solid var(--cfa-red)"><span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cfa-red)">1 · Action</span><span style="font-size:17px;font-weight:700">Reduce</span><span style="font-size:13px;line-height:1.4;color:var(--text-secondary)">A verb that shows direction</span></div>
+                <div style="display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:var(--radius-md);background:rgba(0,79,113,.06);border-top:3px solid var(--cfa-navy)"><span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cfa-navy)">2 · Metric</span><span style="font-size:17px;font-weight:700">DT departure time</span><span style="font-size:13px;line-height:1.4;color:var(--text-secondary)">One number from a report</span></div>
+                <div style="display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:var(--radius-md);background:rgba(36,158,107,.08);border-top:3px solid var(--cfa-green)"><span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cfa-dark-green)">3 · From → to</span><span style="font-size:17px;font-weight:700">44 to 35 seconds</span><span style="font-size:13px;line-height:1.4;color:var(--text-secondary)">Baseline today and the target</span></div>
+                <div style="display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:var(--radius-md);background:var(--surface-subtle);border-top:3px solid var(--cfa-dark-gray)"><span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cfa-dark-gray)">4 · Scope</span><span style="font-size:17px;font-weight:700">at lunch and dinner peaks</span><span style="font-size:13px;line-height:1.4;color:var(--text-secondary)">Optional: where or when it applies</span></div>
+                <div style="display:flex;flex-direction:column;gap:6px;padding:14px;border-radius:var(--radius-md);background:rgba(255,181,73,.14);border-top:3px solid var(--cfa-yellow)"><span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#8a5a00">5 · By date</span><span style="font-size:17px;font-weight:700">by Sept 30, {{ year }}</span><span style="font-size:13px;line-height:1.4;color:var(--text-secondary)">The finish line</span></div>
+              </div>
+              <div style="font-size:18px;line-height:1.5;padding:16px 18px;border-radius:var(--radius-md);border:2px dashed var(--border-default)">
+                <strong style="font-weight:700;color:var(--cfa-red)">Reduce</strong> <strong style="font-weight:700;color:var(--cfa-navy)">DT departure time</strong> from <strong style="font-weight:700;color:var(--cfa-dark-green)">44 to 35 seconds</strong> <span style="color:var(--cfa-dark-gray)">at lunch and dinner peaks</span> <strong style="font-weight:700;color:#8a5a00">by Sept 30, {{ year }}</strong>.
+              </div>
+              <span style="font-size:13px;color:var(--text-secondary)">Helpful verbs: Reduce · Increase · Raise · Close · Reach · Earn · Maintain</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <span style="font-size:16px;font-weight:700">Check your statement</span>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 24px">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">Supports a goal</span><span style="font-size:14px;line-height:1.5;color:var(--text-secondary)">It moves one of the Operator's goals above.</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">One number</span><span style="font-size:14px;line-height:1.5;color:var(--text-secondary)">It names a single metric you can pull from a report.</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">Starts from today</span><span style="font-size:14px;line-height:1.5;color:var(--text-secondary)">It includes the baseline so progress is visible.</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">Has a finish line</span><span style="font-size:14px;line-height:1.5;color:var(--text-secondary)">It has a target and a date, so everyone knows when it's done.</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">In your control</span><span style="font-size:14px;line-height:1.5;color:var(--text-secondary)">Your area's actions can move it, even if you need help from others.</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">A stretch you can reach</span><span style="font-size:14px;line-height:1.5;color:var(--text-secondary)">Hard, but achievable with the actions in your plan.</span></div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <span style="font-size:16px;font-weight:700">From vague to clear</span>
+              <div style="display:flex;flex-direction:column;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden">
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px;padding:10px 16px;background:var(--surface-subtle);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)"><span>Vague</span><span>Clear</span></div>
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px;padding:14px 16px;border-top:1px solid var(--border-subtle);font-size:15px;line-height:1.5"><span style="color:var(--text-secondary)">Improve drive-thru speed.</span><span>Reduce DT departure time from 44 to 35 seconds at lunch and dinner peaks by Sept 30, {{ year }}.</span></div>
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px;padding:14px 16px;border-top:1px solid var(--border-subtle);font-size:15px;line-height:1.5"><span style="color:var(--text-secondary)">Keep more Team Members.</span><span>Raise Team Member retention from 58% to 70% by Dec 31, {{ year }}.</span></div>
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px;padding:14px 16px;border-top:1px solid var(--border-subtle);font-size:15px;line-height:1.5"><span style="color:var(--text-secondary)">Cut food waste.</span><span>Close the food cost gap from 1.2% to 0.5% or less by June 30, {{ year }}.</span></div>
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px;padding:14px 16px;border-top:1px solid var(--border-subtle);font-size:15px;line-height:1.5"><span style="color:var(--text-secondary)">Be better at food safety.</span><span>Earn a Food Safety score of 1 in all four quarterly audits in {{ year }}.</span></div>
+              </div>
+              <span style="font-size:13px;color:var(--text-secondary)">Example numbers are illustrations. Use your area's real baseline.</span>
+            </div>
+
+            <div>
+              <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="secondary" onClick="{{ goStep1 }}" hint-size="200px,44px">Write My Priorities</x-import>
+            </div>
+          </div>
+        </x-import>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <h2 style="margin:0;font-size:22px;font-weight:700;letter-spacing:-0.02em">Planning calendar</h2>
+          <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;overflow:hidden">
+            <sc-for list="{{ calendarV }}" as="c" hint-placeholder-count="5">
+              <div style="padding:18px 20px;display:flex;flex-direction:column;gap:4px;box-shadow:1px 0 0 var(--border-subtle)"><span style="font-size:13px;font-weight:500;color:var(--cfa-red)">{{ c.dateFmt }}</span><span style="font-size:14px;line-height:1.4">{{ c.label }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" onClick="{{ goStep0 }}" hint-size="160px,44px">Start My Plan</x-import>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ LEADER: MY PLAN ============ -->
+    <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">{{ areaName }} · {{ leaderName }}</span>
+            <h1 style="margin:0;font-size:36px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Your {{ year }} plan</h1>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:13px;color:var(--text-secondary)">Due {{ dueShort }}</span>
+            <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Badge" tone="{{ statusTone }}" hint-size="80px,24px">{{ status }}</x-import>
+          </div>
+        </div>
+
+        <sc-if value="{{ hasFeedback }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Toast" tone="warning" title="{{ feedbackTitle }}" hint-size="100%,72px">{{ latestFeedback }}</x-import>
+        </sc-if>
+
+        <nav style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px">
+          <sc-for list="{{ steps }}" as="st" hint-placeholder-count="5">
+            <button onClick="{{ st.go }}" style="font-family:var(--font-sans);display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px 0 0;background:none;border:none;border-top:4px solid {{ st.bar }};cursor:pointer;text-align:left">
+              <span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;line-height:1.3;color:{{ st.numColor }}">Step {{ st.n }}</span>
+              <span style="font-size:15px;line-height:1.3;font-weight:{{ st.weight }};color:var(--text-primary)">{{ st.label }}</span>
+            </button>
+          </sc-for>
+        </nav>
+
+        <!-- Step 1: Reflect -->
+        <sc-if value="{{ step0 }}" hint-placeholder-val="{{ true }}">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="32px" hint-size="100%,420px">
+            <div style="display:flex;flex-direction:column;gap:24px;max-width:720px">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <h2 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-0.02em">Look back at {{ prevYear }}</h2>
+                <p style="margin:0;color:var(--text-secondary);line-height:1.55;text-wrap:pretty">Use a number wherever you can. Specific lessons lead to specific goals.</p>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:14px;font-weight:500">What worked this year that you'll keep doing? <span style="color:var(--cfa-red)">*</span></span>
+                <textarea value="{{ lesson0 }}" onChange="{{ onLesson0 }}" rows="3" placeholder="e.g. Adding a second order-taker at lunch cut DT departure from 52 to 44 seconds." style="font-family:var(--font-sans);font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);resize:vertical;outline:none;background:#fff;color:var(--text-primary)" style-focus="border-color:var(--focus-ring);box-shadow:0 0 0 3px rgba(62,177,200,.25)"></textarea>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:14px;font-weight:500">What didn't work, and what did you learn from it? <span style="color:var(--cfa-red)">*</span></span>
+                <textarea value="{{ lesson1 }}" onChange="{{ onLesson1 }}" rows="3" placeholder="e.g. OSAT dropped to 71 in August when we were short-staffed." style="font-family:var(--font-sans);font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);resize:vertical;outline:none;background:#fff;color:var(--text-primary)" style-focus="border-color:var(--focus-ring);box-shadow:0 0 0 3px rgba(62,177,200,.25)"></textarea>
+              </label>
+            </div>
+          </x-import>
+        </sc-if>
+
+        <!-- Step 2: Priorities -->
+        <sc-if value="{{ step1 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:24px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h2 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-0.02em">Build out your priorities</h2>
+              <p style="margin:0;color:var(--text-secondary);line-height:1.55;max-width:720px;text-wrap:pretty">{{ step2Intro }}</p>
+            </div>
+            <sc-for list="{{ goalsV }}" as="g" hint-placeholder-count="1">
+              <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="32px" hint-size="100%,640px">
+                <div style="display:flex;flex-direction:column;gap:24px">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+                    <div style="display:flex;flex-direction:column;gap:6px">
+                      <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">{{ g.srcLine }}</span>
+                      <sc-if value="{{ g.isAssigned }}" hint-placeholder-val="{{ true }}">
+                        <div style="display:flex;flex-direction:column;gap:4px">
+                          <span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">{{ g.priName }}</span>
+                          <span style="font-size:14px;color:var(--text-secondary)">{{ g.assignedLine }}</span>
+                          <span style="font-size:14px;font-weight:500;color:var(--cfa-navy)">{{ g.goalLine }}</span>
+                        </div>
+                      </sc-if>
+                    </div>
+                    <sc-if value="{{ g.canRemove }}" hint-placeholder-val="{{ false }}">
+                      <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ g.remove }}" hint-size="80px,32px">Remove</x-import>
+                    </sc-if>
+                  </div>
+                  <sc-if value="{{ g.orphan }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:14px;font-weight:500;color:var(--cfa-red)">{{ g.orphanMsg }}</span>
+                  </sc-if>
+                  <sc-if value="{{ g.isOwn }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-direction:column;gap:10px">
+                      <span style="font-size:14px;font-weight:500">Which of the Operator's goals does this priority support? <span style="color:var(--cfa-red)">*</span></span>
+                      <div style="display:flex;flex-wrap:wrap;gap:8px">
+                        <sc-for list="{{ g.goalChips }}" as="c" hint-placeholder-count="3">
+                          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tag" tone="{{ c.tone }}" onClick="{{ c.onClick }}" hint-size="200px,30px">{{ c.label }}</x-import>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-if>
+                  <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Priority statement" required="{{ true }}" value="{{ g.statement }}" onChange="{{ g.on.statement }}" placeholder="e.g. Reduce DT departure time from 44 to 35 seconds by Sept 30, {{ year }}" hint-size="100%,72px"></x-import>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <span style="font-size:14px;font-weight:500">Metric you'll track <span style="color:var(--cfa-red)">*</span></span>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px">
+                      <sc-for list="{{ g.metricChips }}" as="c" hint-placeholder-count="5">
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tag" tone="{{ c.tone }}" onClick="{{ c.onClick }}" hint-size="120px,30px">{{ c.label }}</x-import>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Baseline today" required="{{ true }}" value="{{ g.baseline }}" onChange="{{ g.on.baseline }}" placeholder="e.g. 44 sec" hint-size="100%,72px"></x-import>
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Target" required="{{ true }}" value="{{ g.target }}" onChange="{{ g.on.target }}" placeholder="e.g. 35 sec" hint-size="100%,72px"></x-import>
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Target date" type="date" required="{{ true }}" value="{{ g.deadline }}" onChange="{{ g.on.deadline }}" hint-size="100%,72px"></x-import>
+                  </div>
+                  <label style="display:flex;flex-direction:column;gap:6px">
+                    <span style="font-size:14px;font-weight:500">Why this priority, and why now? <span style="color:var(--cfa-red)">*</span></span>
+                    <textarea value="{{ g.why }}" onChange="{{ g.on.why }}" rows="2" style="font-family:var(--font-sans);font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);resize:vertical;outline:none;background:#fff;color:var(--text-primary)" style-focus="border-color:var(--focus-ring);box-shadow:0 0 0 3px rgba(62,177,200,.25)"></textarea>
+                  </label>
+                </div>
+              </x-import>
+            </sc-for>
+            <sc-if value="{{ canAddOwn }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="secondary" onClick="{{ addOwn }}" hint-size="200px,44px">Add My Own Priority</x-import>
+                <span style="font-size:14px;color:var(--text-secondary)">You can add one priority of your own. It must support at least one goal.</span>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <!-- Step 3: Action plan -->
+        <sc-if value="{{ step2 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:24px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h2 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-0.02em">Build the action plan</h2>
+              <p style="margin:0;color:var(--text-secondary);line-height:1.55;max-width:720px;text-wrap:pretty">Each priority gets its own actions, milestones, resources and risks. Quarterly milestones are what you'll report against at each check-in.</p>
+            </div>
+            <sc-for list="{{ goalsV }}" as="g" hint-placeholder-count="1">
+              <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="32px" hint-size="100%,900px">
+                <div style="display:flex;flex-direction:column;gap:28px">
+                  <div style="display:flex;flex-direction:column;gap:6px">
+                    <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">{{ g.eyebrow }}</span>
+                    <span style="font-size:20px;font-weight:700;line-height:1.3;letter-spacing:-0.01em;text-wrap:pretty">{{ g.statementOr }}</span>
+                    <span style="font-size:14px;color:var(--text-secondary)">{{ g.metricLine }}</span>
+                  </div>
+
+                  <div style="display:flex;flex-direction:column;gap:12px">
+                    <span style="font-size:16px;font-weight:700">Key actions</span>
+                    <sc-for list="{{ g.actionsV }}" as="a" hint-placeholder-count="2">
+                      <div style="display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1.3fr) minmax(0,1.2fr) auto;gap:12px;align-items:end">
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Action {{ a.n }}" value="{{ a.text }}" onChange="{{ a.on.text }}" placeholder="What will be done" hint-size="100%,72px"></x-import>
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Owner" value="{{ a.owner }}" onChange="{{ a.on.owner }}" placeholder="Who" hint-size="100%,72px"></x-import>
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Due" type="date" value="{{ a.due }}" onChange="{{ a.on.due }}" hint-size="100%,72px"></x-import>
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.IconButton" aria-label="Remove action" onClick="{{ a.remove }}" hint-size="44px,44px">×</x-import>
+                      </div>
+                    </sc-for>
+                    <div>
+                      <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ g.addAction }}" hint-size="120px,32px">+ Add Action</x-import>
+                    </div>
+                  </div>
+
+                  <div style="display:flex;flex-direction:column;gap:12px">
+                    <span style="font-size:16px;font-weight:700">Quarterly milestones</span>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
+                      <sc-for list="{{ g.msV }}" as="m" hint-placeholder-count="4">
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="{{ m.label }}" value="{{ m.val }}" onChange="{{ m.on }}" placeholder="{{ m.ph }}" hint-size="100%,72px"></x-import>
+                      </sc-for>
+                    </div>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px">
+                    <div style="display:flex;flex-direction:column;gap:12px">
+                      <span style="font-size:16px;font-weight:700">Resources needed</span>
+                      <div style="display:flex;flex-wrap:wrap;gap:8px">
+                        <sc-for list="{{ g.resChips }}" as="c" hint-placeholder-count="6">
+                          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tag" tone="{{ c.tone }}" onClick="{{ c.onClick }}" hint-size="100px,30px">{{ c.label }}</x-import>
+                        </sc-for>
+                      </div>
+                      <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Details" value="{{ g.resNote }}" onChange="{{ g.on.resNote }}" placeholder="e.g. 2 peak-hour Team Members, one tablet" hint-size="100%,72px"></x-import>
+                      <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Switch" label="Additional training needed" checked="{{ g.training }}" onChange="{{ g.on.training }}" hint-size="260px,32px"></x-import>
+                      <sc-if value="{{ g.training }}" hint-placeholder-val="{{ false }}">
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="What training?" value="{{ g.trainingNote }}" onChange="{{ g.on.trainingNote }}" hint-size="100%,72px"></x-import>
+                      </sc-if>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:12px">
+                      <span style="font-size:16px;font-weight:700">Help from other areas</span>
+                      <div style="display:flex;flex-wrap:wrap;gap:8px">
+                        <sc-for list="{{ g.depChips }}" as="c" hint-placeholder-count="6">
+                          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tag" tone="{{ c.tone }}" onClick="{{ c.onClick }}" hint-size="100px,30px">{{ c.label }}</x-import>
+                        </sc-for>
+                      </div>
+                      <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="What do you need from them, and by when?" value="{{ g.depNote }}" onChange="{{ g.on.depNote }}" hint-size="100%,72px"></x-import>
+                    </div>
+                  </div>
+
+                  <label style="display:flex;flex-direction:column;gap:6px">
+                    <span style="font-size:16px;font-weight:700">Biggest risk or obstacle</span>
+                    <span style="font-size:13px;color:var(--text-secondary)">What could get in the way, and what will you do if it happens?</span>
+                    <textarea value="{{ g.risks }}" onChange="{{ g.on.risks }}" rows="2" style="font-family:var(--font-sans);font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);resize:vertical;outline:none;background:#fff;color:var(--text-primary)" style-focus="border-color:var(--focus-ring);box-shadow:0 0 0 3px rgba(62,177,200,.25)"></textarea>
+                  </label>
+
+                  <div style="display:flex;flex-direction:column;gap:12px;padding-top:24px;border-top:1px solid var(--border-subtle)">
+                    <span style="font-size:16px;font-weight:700">Financial stewardship</span>
+                    <span style="font-size:13px;color:var(--text-secondary)">Only priorities with a direct dollar impact need an estimate.</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px">
+                      <sc-for list="{{ g.finChips }}" as="c" hint-placeholder-count="3">
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tag" tone="{{ c.tone }}" onClick="{{ c.onClick }}" hint-size="140px,30px">{{ c.label }}</x-import>
+                      </sc-for>
+                    </div>
+                    <sc-if value="{{ g.showFin }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:minmax(160px,1fr) minmax(0,2.5fr);gap:16px">
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Annual $ estimate" required="{{ true }}" value="{{ g.finAmt }}" onChange="{{ g.on.finAmt }}" placeholder="$0" hint-size="100%,72px"></x-import>
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="How you calculated it" value="{{ g.finWhy }}" onChange="{{ g.on.finWhy }}" placeholder="e.g. +3 cars per peak hour × $9.40 avg check × 2 peaks × 310 days" hint-size="100%,72px"></x-import>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </x-import>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- Step 4: Support -->
+        <sc-if value="{{ step3 }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="32px" hint-size="100%,420px">
+            <div style="display:flex;flex-direction:column;gap:24px;max-width:720px">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <h2 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-0.02em">Support and accountability</h2>
+                <p style="margin:0;color:var(--text-secondary);line-height:1.55;text-wrap:pretty">You'll report progress at a quarterly check-in during the first week of April, July, October and January.</p>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:14px;font-weight:500">How will you recognize the team when a milestone is hit? <span style="color:var(--cfa-red)">*</span></span>
+                <textarea value="{{ recog }}" onChange="{{ onRecog }}" rows="2" style="font-family:var(--font-sans);font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);resize:vertical;outline:none;background:#fff;color:var(--text-primary)" style-focus="border-color:var(--focus-ring);box-shadow:0 0 0 3px rgba(62,177,200,.25)"></textarea>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:14px;font-weight:500">How will you sustain results once a target is reached?</span>
+                <textarea value="{{ sustain }}" onChange="{{ onSustain }}" rows="2" style="font-family:var(--font-sans);font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);resize:vertical;outline:none;background:#fff;color:var(--text-primary)" style-focus="border-color:var(--focus-ring);box-shadow:0 0 0 3px rgba(62,177,200,.25)"></textarea>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:14px;font-weight:500">What excites you most about these priorities?</span>
+                <textarea value="{{ excite }}" onChange="{{ onExcite }}" rows="2" style="font-family:var(--font-sans);font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);resize:vertical;outline:none;background:#fff;color:var(--text-primary)" style-focus="border-color:var(--focus-ring);box-shadow:0 0 0 3px rgba(62,177,200,.25)"></textarea>
+              </label>
+            </div>
+          </x-import>
+        </sc-if>
+
+        <!-- Step 5: Review -->
+        <sc-if value="{{ step4 }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="32px" hint-size="100%,480px">
+            <div style="display:flex;flex-direction:column;gap:24px;max-width:720px">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <h2 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-0.02em">Review and submit</h2>
+                <p style="margin:0;color:var(--text-secondary);line-height:1.55;text-wrap:pretty">Your plan can be submitted once every item below is complete. Your Director reviews it first, then the Operator gives final approval. Either can send it back with notes.</p>
+              </div>
+              <div style="display:flex;flex-direction:column;border-top:1px solid var(--border-subtle)">
+                <sc-for list="{{ checks }}" as="c" hint-placeholder-count="8">
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-subtle)">
+                    <span style="width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;background:{{ c.bg }};color:{{ c.fg }}">{{ c.mark }}</span>
+                    <span style="font-size:15px;color:{{ c.text }}">{{ c.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+                <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" disabled="{{ cannotSubmit }}" onClick="{{ submit }}" hint-size="160px,44px">{{ submitLabel }}</x-import>
+                <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" onClick="{{ goPrint }}" hint-size="160px,44px">See One-Page Plan</x-import>
+              </div>
+            </div>
+          </x-import>
+        </sc-if>
+
+        <div style="display:flex;justify-content:space-between;gap:12px">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="secondary" disabled="{{ isFirstStep }}" onClick="{{ back }}" hint-size="100px,44px">Back</x-import>
+          <sc-if value="{{ notLastStep }}" hint-placeholder-val="{{ true }}">
+            <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" onClick="{{ next }}" hint-size="100px,44px">Next</x-import>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ LEADER: CHECK-IN ============ -->
+    <sc-if value="{{ isCheckin }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">{{ areaName }} · {{ leaderName }}</span>
+          <h1 style="margin:0;font-size:36px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Quarterly check-in</h1>
+          <p style="margin:0;color:var(--text-secondary);line-height:1.55;max-width:680px">Report where each number stands against this quarter's milestone. Takes about five minutes.</p>
+        </div>
+        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tabs" items="{{ quarterItems }}" value="{{ quarter }}" onChange="{{ setQuarter }}" hint-size="320px,44px"></x-import>
+        <sc-if value="{{ noGoals }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="32px" hint-size="100%,100px">
+            <p style="margin:0;color:var(--text-secondary)">No priorities yet. Build your plan first, then check in each quarter.</p>
+          </x-import>
+        </sc-if>
+        <sc-for list="{{ ciV }}" as="g" hint-placeholder-count="2">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,380px">
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+                <div style="display:flex;flex-direction:column;gap:6px;max-width:640px">
+                  <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">{{ g.eyebrow }}</span>
+                  <span style="font-size:18px;font-weight:700;line-height:1.3;text-wrap:pretty">{{ g.statement }}</span>
+                  <span style="font-size:14px;font-weight:500;color:var(--cfa-navy)">{{ g.goalLine }}</span>
+                </div>
+                <div style="display:flex;gap:24px">
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;font-weight:500">Baseline</span><span style="font-size:18px;font-weight:700">{{ g.baseline }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;font-weight:500">{{ quarter }} milestone</span><span style="font-size:18px;font-weight:700">{{ g.milestone }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;font-weight:500">Target</span><span style="font-size:18px;font-weight:700;color:var(--cfa-red)">{{ g.target }}</span></div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:minmax(160px,220px) minmax(0,1fr);gap:20px;align-items:end">
+                <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Current number" value="{{ g.value }}" onChange="{{ g.on.value }}" placeholder="{{ g.metric }}" hint-size="100%,72px"></x-import>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <span style="font-size:14px;font-weight:500">Status</span>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <sc-for list="{{ g.statusChips }}" as="c" hint-placeholder-count="3">
+                      <button onClick="{{ c.onClick }}" style="font-family:var(--font-sans);font-size:14px;font-weight:500;padding:10px 18px;border-radius:999px;cursor:pointer;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+                <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="What's working" value="{{ g.note }}" onChange="{{ g.on.note }}" hint-size="100%,72px"></x-import>
+                <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Blockers or help needed" value="{{ g.blocker }}" onChange="{{ g.on.blocker }}" hint-size="100%,72px"></x-import>
+              </div>
+            </div>
+          </x-import>
+        </sc-for>
+        <sc-if value="{{ hasGoals }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" onClick="{{ submitCheckin }}" hint-size="200px,44px">Submit {{ quarter }} Check-in</x-import>
+            <span style="font-size:14px;color:var(--text-secondary)">{{ checkinNote }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- ============ LEADER: ONE-PAGE PLAN ============ -->
+    <sc-if value="{{ isPrint }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:16px;align-items:center">
+        <div data-noprint="" style="width:100%;max-width:816px;display:flex;justify-content:flex-end">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="navy" onClick="{{ doPrint }}" hint-size="120px,44px">Print Plan</x-import>
+        </div>
+        <article data-printsheet="" style="width:100%;max-width:816px;box-sizing:border-box;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:48px;display:flex;flex-direction:column;gap:24px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-bottom:16px;border-bottom:3px solid var(--cfa-red)">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">Ft. Totten · {{ year }} Goal Plan</span>
+              <span style="font-size:28px;font-weight:700;letter-spacing:-0.02em">{{ areaName }}</span>
+              <span style="font-size:14px;color:var(--text-secondary)">{{ leaderName }} · Status: {{ status }}</span>
+            </div>
+            <img src="assets/cfa-script-red.png" alt="Chick-fil-A" style="height:30px;width:auto">
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
+            <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cfa-navy)">Keep doing</span><span style="font-size:13px;line-height:1.5">{{ lesson0 }}</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cfa-navy)">Lesson learned</span><span style="font-size:13px;line-height:1.5">{{ lesson1 }}</span></div>
+          </div>
+          <sc-for list="{{ goalsV }}" as="g" hint-placeholder-count="2">
+            <section style="display:flex;flex-direction:column;gap:14px;padding:20px;border:1px solid var(--border-default);border-radius:var(--radius-md);break-inside:avoid">
+              <div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start">
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">{{ g.eyebrow }}</span>
+                  <span style="font-size:17px;font-weight:700;line-height:1.3;text-wrap:pretty">{{ g.statementOr }}</span>
+                  <span style="font-size:12px;font-weight:500;color:var(--cfa-navy)">{{ g.goalLine }}</span>
+                </div>
+                <div style="display:flex;gap:16px;flex:none;text-align:right">
+                  <div style="display:flex;flex-direction:column"><span style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em">Baseline</span><span style="font-size:16px;font-weight:700">{{ g.baseline }}</span></div>
+                  <div style="display:flex;flex-direction:column"><span style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em">Target</span><span style="font-size:16px;font-weight:700;color:var(--cfa-red)">{{ g.target }}</span></div>
+                  <div style="display:flex;flex-direction:column"><span style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em">By</span><span style="font-size:16px;font-weight:700">{{ g.deadlineFmt }}</span></div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--border-subtle);border-radius:var(--radius-sm)">
+                <sc-for list="{{ g.msV }}" as="m" hint-placeholder-count="4">
+                  <div style="display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-right:1px solid var(--border-subtle)"><span style="font-size:11px;font-weight:500;color:var(--text-secondary)">{{ m.q }}</span><span style="font-size:13px;font-weight:500">{{ m.val }}</span></div>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cfa-navy)">Actions</span>
+                  <sc-for list="{{ g.actionsV }}" as="a" hint-placeholder-count="2">
+                    <span style="font-size:13px;line-height:1.45">{{ a.text }} <span style="color:var(--text-secondary)">— {{ a.owner }}, {{ a.dueFmt }}</span></span>
+                  </sc-for>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;line-height:1.45">
+                  <span><strong style="font-weight:500">Resources:</strong> {{ g.resLine }}</span>
+                  <span><strong style="font-weight:500">Needs from:</strong> {{ g.depLine }}</span>
+                  <span><strong style="font-weight:500">Risk:</strong> {{ g.risks }}</span>
+                  <span><strong style="font-weight:500">$ impact:</strong> {{ g.finLine }}</span>
+                </div>
+              </div>
+            </section>
+          </sc-for>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
+            <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cfa-navy)">Recognition</span><span style="font-size:13px;line-height:1.5">{{ recog }}</span></div>
+            <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--cfa-navy)">Check-ins</span><span style="font-size:13px;line-height:1.5">First week of April, July, October and January.</span></div>
+          </div>
+        </article>
+      </div>
+    </sc-if>
+
+    <!-- ============ OPERATOR: DASHBOARD ============ -->
+    <sc-if value="{{ isDash }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:32px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">{{ roleEyebrow }}</span>
+          <h1 style="margin:0;font-size:36px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">All areas</h1>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px">
+          <sc-for list="{{ counts }}" as="c" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:18px 20px;display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:32px;font-weight:700;letter-spacing:-0.02em;color:{{ c.color }}">{{ c.n }}</span>
+              <span style="font-size:14px;color:var(--text-secondary)">{{ c.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <h2 style="margin:0;font-size:22px;font-weight:700;letter-spacing:-0.02em">Priority coverage</h2>
+            <span style="font-size:14px;color:var(--text-secondary)">Which areas have built out each priority, and the goals it supports.</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+            <sc-for list="{{ priCards }}" as="p" hint-placeholder-count="8">
+              <div style="background:#fff;border:1px solid var(--border-subtle);border-top:4px solid {{ p.accent }};border-radius:var(--radius-lg);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <span style="font-size:15px;font-weight:700;line-height:1.3">{{ p.name }}</span>
+                  <span style="font-size:13px;color:var(--text-secondary)">Target {{ p.target }}</span>
+                  <span style="font-size:13px;font-weight:500;color:var(--cfa-navy)">{{ p.goalLine }}</span>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <sc-for list="{{ p.areas }}" as="a" hint-placeholder-count="1">
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tag" tone="navy" hint-size="80px,28px">{{ a }}</x-import>
+                  </sc-for>
+                  <sc-if value="{{ p.uncovered }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:13px;font-weight:500;color:var(--cfa-red)">Not built out yet</span>
+                  </sc-if>
+                </div>
+                <span style="font-size:13px;color:var(--text-secondary)">{{ p.leadLine }}</span>
+                <sc-if value="{{ p.hasMissing }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:500;color:var(--cfa-red)">{{ p.missingLine }}</span></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <h2 style="margin:0;font-size:22px;font-weight:700;letter-spacing:-0.02em">Plans by area</h2>
+          <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden">
+            <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 70px minmax(0,1fr) minmax(0,1fr) 110px;gap:12px;padding:12px 20px;background:var(--surface-subtle);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)">
+              <span>Area</span><span>Plan status</span><span>Priorities</span><span>Completeness</span><span>Latest check-in</span><span></span>
+            </div>
+            <sc-for list="{{ areaRows }}" as="r" hint-placeholder-count="10">
+              <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 70px minmax(0,1fr) minmax(0,1fr) 110px;gap:12px;padding:14px 20px;align-items:center;border-top:1px solid var(--border-subtle)">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:500">{{ r.name }}</span><span style="font-size:13px;color:var(--text-secondary)">{{ r.leader }}</span></div>
+                <div><x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Badge" tone="{{ r.tone }}" hint-size="80px,24px">{{ r.status }}</x-import></div>
+                <span style="font-size:15px">{{ r.goals }}</span>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="flex:1;height:6px;border-radius:999px;background:var(--surface-subtle);overflow:hidden"><div style="height:100%;width:{{ r.pct }};background:{{ r.barColor }}"></div></div>
+                  <span style="font-size:13px;color:var(--text-secondary);min-width:28px">{{ r.score }}</span>
+                </div>
+                <div><sc-if value="{{ r.hasCi }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Badge" tone="{{ r.ciTone }}" hint-size="100px,24px">{{ r.ci }}</x-import></sc-if><sc-if value="{{ r.noCi }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;color:var(--text-muted)">—</span></sc-if></div>
+                <div style="text-align:right"><x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ r.review }}" hint-size="90px,32px">Review</x-import></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ OPERATOR: REVIEW ============ -->
+    <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+        <div style="flex:0 1 260px;min-width:220px;display:flex;flex-direction:column;gap:4px;background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:8px">
+          <sc-for list="{{ reviewList }}" as="r" hint-placeholder-count="7">
+            <button onClick="{{ r.select }}" style="font-family:var(--font-sans);display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px;border:none;border-radius:var(--radius-md);cursor:pointer;text-align:left;background:{{ r.bg }};color:var(--text-primary)">
+              <span style="font-size:14px;font-weight:{{ r.weight }}">{{ r.name }}</span>
+              <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Badge" tone="{{ r.tone }}" hint-size="70px,22px">{{ r.status }}</x-import>
+            </button>
+          </sc-for>
+        </div>
+        <div style="flex:1 1 520px;min-width:0;display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">{{ rv.leader }}</span>
+              <h1 style="margin:0;font-size:32px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">{{ rv.name }}</h1>
+            </div>
+            <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Badge" tone="{{ rv.tone }}" hint-size="80px,24px">{{ rv.status }}</x-import>
+          </div>
+          <sc-if value="{{ rv.empty }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,90px">
+              <p style="margin:0;color:var(--text-secondary)">This leader hasn't started a plan yet.</p>
+            </x-import>
+          </sc-if>
+          <sc-for list="{{ rv.goals }}" as="g" hint-placeholder-count="1">
+            <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="24px" hint-size="100%,220px">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">{{ g.eyebrow }}</span>
+                  <span style="font-size:18px;font-weight:700;line-height:1.3;text-wrap:pretty">{{ g.statementOr }}</span>
+                  <span style="font-size:14px;font-weight:500;color:var(--cfa-navy)">{{ g.goalLine }}</span>
+                </div>
+                <div style="display:flex;gap:28px;flex-wrap:wrap">
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;font-weight:500">Metric</span><span style="font-size:15px;font-weight:500">{{ g.metricOr }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;font-weight:500">Baseline → target</span><span style="font-size:15px;font-weight:500">{{ g.baseline }} → {{ g.target }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;font-weight:500">By</span><span style="font-size:15px;font-weight:500">{{ g.deadlineFmt }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;font-weight:500">$ impact</span><span style="font-size:15px;font-weight:500">{{ g.finLine }}</span></div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+                  <sc-for list="{{ g.msV }}" as="m" hint-placeholder-count="4">
+                    <div style="background:var(--surface-subtle);border-radius:var(--radius-sm);padding:8px 10px;display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;font-weight:500;color:var(--text-secondary)">{{ m.q }}</span><span style="font-size:13px;font-weight:500">{{ m.val }}</span></div>
+                  </sc-for>
+                </div>
+                <span style="font-size:14px;line-height:1.5;color:var(--text-secondary)"><strong style="font-weight:500;color:var(--text-primary)">Needs from:</strong> {{ g.depLine }} · <strong style="font-weight:500;color:var(--text-primary)">Risk:</strong> {{ g.risks }}</span>
+              </div>
+            </x-import>
+          </sc-for>
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="24px" hint-size="100%,420px">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <span style="font-size:16px;font-weight:700">Plan quality check</span>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 20px">
+                <sc-for list="{{ rv.checks }}" as="c" hint-placeholder-count="8">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:{{ c.bg }};color:{{ c.fg }}">{{ c.mark }}</span>
+                    <span style="font-size:14px;color:{{ c.text }}">{{ c.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-for list="{{ rv.feedback }}" as="f" hint-placeholder-count="0">
+                <div style="background:var(--cfa-cream);border-radius:var(--radius-md);padding:12px 14px;font-size:14px;line-height:1.5"><strong style="font-weight:500">{{ f.label }}:</strong> {{ f.text }}</div>
+              </sc-for>
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:14px;font-weight:500">Feedback for {{ rv.leaderShort }}</span>
+                <textarea value="{{ reviewNote }}" onChange="{{ onReviewNote }}" rows="3" placeholder="Required when requesting a revision" style="font-family:var(--font-sans);font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);resize:vertical;outline:none;background:#fff;color:var(--text-primary)" style-focus="border-color:var(--focus-ring);box-shadow:0 0 0 3px rgba(62,177,200,.25)"></textarea>
+              </label>
+              <span style="font-size:14px;line-height:1.5;color:var(--text-secondary)">{{ rv.stageLine }}</span>
+              <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" disabled="{{ rv.cannotAct }}" onClick="{{ approve }}" hint-size="240px,44px">{{ rv.approveLabel }}</x-import>
+                <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="secondary" disabled="{{ rv.cannotRevise }}" onClick="{{ requestRevision }}" hint-size="170px,44px">Request Revision</x-import>
+              </div>
+            </div>
+          </x-import>
+        </div>
+      </div>
+    </sc-if>
+    <!-- ============ GOAL REVIEW ============ -->
+    <sc-if value="{{ isGoalReview }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">{{ roleEyebrow }}</span>
+          <h1 style="margin:0;font-size:36px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Goal review</h1>
+          <p style="margin:0;color:var(--text-secondary);line-height:1.55;max-width:680px;text-wrap:pretty">{{ goalReviewIntro }}</p>
+        </div>
+        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tabs" items="{{ quarterItems }}" value="{{ quarter }}" onChange="{{ setQuarter }}" hint-size="320px,44px"></x-import>
+        <sc-if value="{{ goalsEmpty }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,90px">
+            <p style="margin:0;color:var(--text-secondary)">No goals are set for {{ year }} yet.</p>
+          </x-import>
+        </sc-if>
+        <sc-for list="{{ goalRev }}" as="g" hint-placeholder-count="3">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,360px">
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap">
+                <div style="display:flex;flex-direction:column;gap:6px;max-width:600px">
+                  <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Goal {{ g.n }}</span>
+                  <span style="font-size:22px;font-weight:700;line-height:1.25;letter-spacing:-0.01em;text-wrap:pretty">{{ g.statement }}</span>
+                  <span style="font-size:14px;color:var(--text-secondary)">{{ g.measure }} · Target {{ g.target }}</span>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start">
+                  <sc-for list="{{ g.tally }}" as="t" hint-placeholder-count="4">
+                    <div style="display:flex;flex-direction:column;gap:2px;padding:10px 14px;min-width:72px;background:var(--surface-subtle);border-radius:var(--radius-md)">
+                      <span style="font-size:22px;font-weight:700;color:{{ t.color }}">{{ t.n }}</span>
+                      <span style="font-size:12px;color:var(--text-secondary)">{{ t.label }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;border-top:1px solid var(--border-subtle)">
+                <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+                  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto;gap:16px;padding:12px 0;align-items:center;border-bottom:1px solid var(--border-subtle)">
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:500">{{ r.area }}</span><span style="font-size:13px;color:var(--text-secondary)">{{ r.pri }}</span></div>
+                    <span style="font-size:14px;line-height:1.45">{{ r.statement }}</span>
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Badge" tone="{{ r.tone }}" hint-size="80px,24px">{{ r.status }}</x-import>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ g.noRows }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:14px;color:var(--text-secondary);padding:12px 0">No area priorities support this goal yet.</span>
+                </sc-if>
+              </div>
+              <sc-if value="{{ g.canScore }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <span style="font-size:16px;font-weight:700">Your {{ quarter }} score</span>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <sc-for list="{{ g.scoreChips }}" as="c" hint-placeholder-count="3">
+                      <button onClick="{{ c.onClick }}" style="font-family:var(--font-sans);font-size:14px;font-weight:500;padding:10px 18px;border-radius:999px;cursor:pointer;border:2px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button>
+                    </sc-for>
+                  </div>
+                  <textarea value="{{ g.note }}" onChange="{{ g.onNote }}" rows="2" placeholder="What's driving this score?" style="font-family:var(--font-sans);font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);resize:vertical;outline:none;background:#fff;color:var(--text-primary)" style-focus="border-color:var(--focus-ring);box-shadow:0 0 0 3px rgba(62,177,200,.25)"></textarea>
+                </div>
+              </sc-if>
+              <sc-if value="{{ g.readOnly }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                  <span style="font-size:14px;font-weight:500">Operator's {{ quarter }} score</span>
+                  <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Badge" tone="{{ g.scoreTone }}" hint-size="100px,24px">{{ g.scoreLabel }}</x-import>
+                  <span style="font-size:14px;line-height:1.5;color:var(--text-secondary)">{{ g.noteOr }}</span>
+                </div>
+              </sc-if>
+            </div>
+          </x-import>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- ============ PLAN SETTINGS / PRIORITIES ============ -->
+    <sc-if value="{{ isPriorities }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">{{ roleEyebrow }}</span>
+          <h1 style="margin:0;font-size:36px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">{{ settingsTitle }}</h1>
+        </div>
+        <sc-if value="{{ isOperator }}" hint-placeholder-val="{{ false }}">
+        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="28px" hint-size="100%,520px">
+          <div style="display:flex;flex-direction:column;gap:24px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap">
+              <div style="display:flex;flex-direction:column;gap:4px;max-width:560px">
+                <span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">Plan year and schedule</span>
+                <span style="font-size:14px;line-height:1.5;color:var(--text-secondary)">Switching to a new year saves this year's plans, carries the goals and priorities forward with baselines cleared, and moves the schedule dates forward. Leader plans start fresh.</span>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:14px;font-weight:500">Plan year</span>
+                <select value="{{ yearStr }}" onChange="{{ setYear }}" style="font-family:var(--font-sans);font-size:16px;font-weight:500;padding:12px 14px;border:2px solid var(--border-default);border-radius:var(--radius-md);background:#fff;color:var(--text-primary);cursor:pointer;min-width:180px">
+                  <sc-for list="{{ yearOptions }}" as="o" hint-placeholder-count="6"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
+                </select>
+              </label>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ calEdit }}" as="c" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:minmax(150px,200px) minmax(0,1fr) auto;gap:12px;align-items:end">
+                  <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Date" type="date" value="{{ c.date }}" onChange="{{ c.on.date }}" hint-size="100%,72px"></x-import>
+                  <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Milestone" value="{{ c.label }}" onChange="{{ c.on.label }}" placeholder="e.g. Leader drafts due" hint-size="100%,72px"></x-import>
+                  <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.IconButton" aria-label="Remove milestone" onClick="{{ c.remove }}" hint-size="44px,44px">×</x-import>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="secondary" size="sm" onClick="{{ addCal }}" hint-size="140px,32px">+ Add Milestone</x-import>
+              <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ resetCal }}" hint-size="140px,32px">Reset Schedule</x-import>
+              <span style="font-size:13px;color:var(--text-secondary)">The latest date is shown to leaders as the plan due date: {{ dueFmt }}.</span>
+            </div>
+          </div>
+        </x-import>
+        </sc-if>
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-top:8px">
+          <div style="display:flex;flex-direction:column;gap:6px;max-width:680px">
+            <h2 style="margin:0;font-size:24px;line-height:1.2;font-weight:700;letter-spacing:-0.02em">{{ year }} goals</h2>
+            <p style="margin:0;color:var(--text-secondary);line-height:1.55;text-wrap:pretty">{{ goalsIntro }}</p>
+          </div>
+          <sc-if value="{{ canAddGoalOp }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" onClick="{{ addGoalOp }}" hint-size="120px,44px">Add Goal</x-import>
+          </sc-if>
+        </div>
+        <sc-if value="{{ isOperator }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <sc-for list="{{ goalEdit }}" as="g" hint-placeholder-count="3">
+              <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="24px" hint-size="100%,200px">
+                <div style="display:flex;flex-direction:column;gap:16px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+                    <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Goal {{ g.n }}</span>
+                    <div style="display:flex;align-items:center;gap:12px">
+                      <span style="font-size:13px;color:{{ g.linkedColor }}">{{ g.linked }}</span>
+                      <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ g.remove }}" hint-size="80px,32px">Remove</x-import>
+                    </div>
+                  </div>
+                  <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Goal statement" value="{{ g.statement }}" onChange="{{ g.on.statement }}" placeholder="e.g. Be the most-loved restaurant in Ft. Totten" hint-size="100%,72px"></x-import>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Measure of success" value="{{ g.measure }}" onChange="{{ g.on.measure }}" placeholder="e.g. OSAT score" hint-size="100%,72px"></x-import>
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Target" value="{{ g.target }}" onChange="{{ g.on.target }}" placeholder="e.g. 78 or higher" hint-size="100%,72px"></x-import>
+                  </div>
+                </div>
+              </x-import>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isDirector }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+            <sc-for list="{{ goalCards }}" as="g" hint-placeholder-count="3">
+              <div style="background:#fff;border:1px solid var(--border-subtle);border-top:4px solid var(--cfa-red);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Goal {{ g.n }}</span>
+                <span style="font-size:18px;font-weight:700;line-height:1.3;text-wrap:pretty">{{ g.statement }}</span>
+                <span style="font-size:14px;color:var(--text-secondary)">{{ g.measure }}</span>
+                <span style="font-size:15px;font-weight:700;color:var(--cfa-red)">Target {{ g.target }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ goalCountWarn }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:14px;font-weight:500;color:var(--cfa-red)">{{ goalCountMsg }}</span>
+        </sc-if>
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-top:16px">
+          <div style="display:flex;flex-direction:column;gap:6px;max-width:680px">
+            <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">{{ priCount }} priorities</span>
+            <h2 style="margin:0;font-size:24px;line-height:1.2;font-weight:700;letter-spacing:-0.02em">{{ year }} priorities</h2>
+            <p style="margin:0;color:var(--text-secondary);line-height:1.55;text-wrap:pretty">{{ priIntro }}</p>
+          </div>
+          <div style="display:flex;gap:8px">
+            <sc-if value="{{ isOperator }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" onClick="{{ resetPriorities }}" hint-size="140px,44px">Reset to Default</x-import>
+            </sc-if>
+            <sc-if value="{{ canAddPri }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" onClick="{{ addPriority }}" hint-size="140px,44px">Add Priority</x-import>
+            </sc-if>
+          </div>
+        </div>
+        <sc-for list="{{ priV }}" as="p" hint-placeholder-count="8">
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="24px" hint-size="100%,200px">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+                <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+                  <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">Priority {{ p.n }}</span>
+                  <span style="font-size:13px;color:var(--text-secondary)">{{ p.manageLine }}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <span style="font-size:13px;color:{{ p.linkedColor }}">{{ p.linkedLabel }}</span>
+                  <sc-if value="{{ p.editable }}" hint-placeholder-val="{{ true }}">
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ p.remove }}" hint-size="80px,32px">Remove</x-import>
+                  </sc-if>
+                </div>
+              </div>
+              <sc-if value="{{ p.editable }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:16px">
+                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Priority" value="{{ p.name }}" onChange="{{ p.on.name }}" placeholder="e.g. Drive-thru departure time" hint-size="100%,72px"></x-import>
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Metric" value="{{ p.metric }}" onChange="{{ p.on.metric }}" placeholder="How it's measured" hint-size="100%,72px"></x-import>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;align-items:end">
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="{{ prevYear }} baseline" value="{{ p.baseline }}" onChange="{{ p.on.baseline }}" placeholder="Where it is today" hint-size="100%,72px"></x-import>
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="{{ year }} target" value="{{ p.target }}" onChange="{{ p.on.target }}" placeholder="e.g. 35 sec or less" hint-size="100%,72px"></x-import>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <span style="font-size:14px;font-weight:500">Supports goals <span style="font-weight:400;color:var(--text-secondary)">· pick one or more</span></span>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px">
+                      <sc-for list="{{ p.goalChips }}" as="c" hint-placeholder-count="3">
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tag" tone="{{ c.tone }}" onClick="{{ c.onClick }}" hint-size="200px,30px">{{ c.label }}</x-import>
+                      </sc-for>
+                    </div>
+                    <sc-if value="{{ p.noGoal }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:500;color:var(--cfa-red)">Not linked to a goal yet.</span></sc-if>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <span style="font-size:14px;font-weight:500">Assign to <span style="font-weight:400;color:var(--text-secondary)">· each lead area must build this out in its plan</span></span>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px">
+                      <sc-for list="{{ p.ownerChips }}" as="c" hint-placeholder-count="3">
+                        <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tag" tone="{{ c.tone }}" onClick="{{ c.onClick }}" hint-size="110px,30px">{{ c.label }}</x-import>
+                      </sc-for>
+                    </div>
+                    <sc-if value="{{ p.noOwner }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:500;color:var(--cfa-red)">Not assigned yet. No area is required to build this out.</span></sc-if>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ p.readOnly }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <span style="font-size:18px;font-weight:700">{{ p.nameOr }}</span>
+                  <span style="font-size:14px;color:var(--text-secondary)">{{ p.metricOr }} · {{ p.baselineOr }} → {{ p.targetOr }}</span>
+                  <span style="font-size:14px;font-weight:500;color:var(--cfa-navy)">{{ p.goalNames }}</span>
+                  <span style="font-size:14px;color:var(--text-secondary)">{{ p.ownerNames }}</span>
+                </div>
+              </sc-if>
+            </div>
+          </x-import>
+        </sc-for>
+
+        <sc-if value="{{ isOperator }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:16px;padding-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:6px;max-width:680px">
+            <h2 style="margin:0;font-size:24px;line-height:1.2;font-weight:700;letter-spacing:-0.02em">Metrics by area</h2>
+            <p style="margin:0;color:var(--text-secondary);line-height:1.55;text-wrap:pretty">These are the metric options each leader sees when building out a priority. Keep only numbers your area actually gets reports on.</p>
+          </div>
+          <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" onClick="{{ resetMetrics }}" hint-size="140px,44px">Reset Metrics</x-import>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px">
+          <sc-for list="{{ metricAreas }}" as="a" hint-placeholder-count="10">
+            <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Card" padding="24px" hint-size="100%,220px">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+                  <span style="font-size:17px;font-weight:700">{{ a.name }}</span>
+                  <span style="font-size:13px;color:var(--text-secondary)">{{ a.count }}</span>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ a.chips }}" as="c" hint-placeholder-count="4">
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Tag" tone="navy" onRemove="{{ c.remove }}" hint-size="120px,30px">{{ c.label }}</x-import>
+                  </sc-for>
+                  <sc-if value="{{ a.empty }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:13px;font-weight:500;color:var(--cfa-red)">No metrics yet. Leaders in this area will have nothing to pick.</span>
+                  </sc-if>
+                </div>
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end">
+                  <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Input" label="Add a metric" value="{{ a.draft }}" onChange="{{ a.onDraft }}" onKeyDown="{{ a.onKey }}" placeholder="Type and press Enter" hint-size="100%,72px"></x-import>
+                  <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="secondary" onClick="{{ a.add }}" hint-size="80px,44px">Add</x-import>
+                </div>
+              </div>
+            </x-import>
+          </sc-for>
+        </div>
+        </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </main>
+
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div data-noprint="" style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:min(440px,calc(100% - 32px));z-index:10">
+      <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Toast" tone="{{ toastTone }}" title="{{ toastTitle }}" onClose="{{ closeToast }}" hint-size="100%,72px">{{ toastBody }}</x-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const DEFAULT_PRI = [
+  { id: 'dt', name: 'Drive-thru departure time', metric: 'DT departure time', baseline: '', target: '35 sec or less', owners: ['foh'], goalIds: [] },
+  { id: 'tx', name: 'Daily transactions', metric: 'Daily transaction count vs. last year', baseline: '', target: '+1%', owners: ['mkt'], goalIds: [] },
+  { id: 'sales', name: 'Sales growth', metric: 'Sales vs. last year', baseline: '', target: '+3%', owners: ['mkt'], goalIds: [] },
+  { id: 'ret', name: 'Team Member retention', metric: 'Annual retention', baseline: '', target: '70%', owners: ['talent'], goalIds: [] },
+  { id: 'osat', name: 'OSAT', metric: 'OSAT score', baseline: '', target: '78', owners: ['foh'], goalIds: [] },
+  { id: 'fc', name: 'Food cost gap', metric: 'Actual vs. ideal food cost', baseline: '', target: '0.5% or less', owners: ['boh'], goalIds: [] },
+  { id: 'lab', name: 'Labor productivity', metric: 'Sales per labor hour', baseline: '', target: '$102', owners: ['admin'], goalIds: [] },
+  { id: 'fs', name: 'Food Safety – Guardian of the Brand', metric: 'Food Safety score', baseline: '', target: 'Score of 1 every quarter', owners: ['fsafe'], goalIds: [] }
+];
+const DEMO_GOALS = [
+  { id: 'g1', statement: 'Be the most-loved restaurant in Ft. Totten', measure: 'OSAT and Food Safety score', target: 'OSAT 78+, Food Safety 1 every quarter' },
+  { id: 'g2', statement: 'Grow the business profitably', measure: 'Sales growth and food cost gap', target: '+3% sales, food cost gap 0.5% or less' },
+  { id: 'g3', statement: 'Build a team people want to stay on', measure: 'Annual Team Member retention', target: '70%' }
+];
+const DEMO_LINKS = { dt: ['g1', 'g2'], tx: ['g2'], sales: ['g2'], ret: ['g3'], osat: ['g1'], fc: ['g2'], lab: ['g2'], fs: ['g1'] };
+const DEMO_DIRECTORS = [
+  { name: 'Abby', email: 'abby@cfafttotten.com', areas: ['foh', 'train', 'fsafe'] },
+  { name: 'Maria', email: 'maria@cfafttotten.com', areas: ['boh', 'inv', 'fac'] },
+  { name: 'Angela', email: 'angela@cfafttotten.com', areas: ['cat', 'mkt', 'talent'] }
+];
+let PRI = DEFAULT_PRI, GOALS = [], DIRS = [], YEAR = 2027;
+const clone = o => JSON.parse(JSON.stringify(o));
+const ownersOf = pr => pr.owners || (pr.owner ? [pr.owner] : []);
+const assignedTo = areaId => PRI.filter(pr => ownersOf(pr).includes(areaId));
+const dirsOf = areaId => DIRS.filter(d => (d.areas || []).includes(areaId));
+const dirNames = areaId => dirsOf(areaId).map(d => d.name || d.email).join(', ');
+const goalIdsOf = it => it.priority === 'own' ? (it.goalIds || []) : ((priById(it.priority) || {}).goalIds || []);
+const goalLabel = id => { const k = GOALS.findIndex(G => G.id === id); return k < 0 ? null : 'Goal ' + (k + 1); };
+const goalsLine = ids => { const l = (ids || []).map(goalLabel).filter(Boolean); return l.length ? 'Supports ' + l.join(', ') : 'Not linked to a goal yet'; };
+const listJoin = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+const LOCKED = ['Submitted', 'Director approved', 'Approved'];
+const defaultCalendar = y => [
+  { date: (y - 1) + '-10-05', label: 'Operator shares goals; Directors set priorities' },
+  { date: (y - 1) + '-11-06', label: 'Leader drafts due' },
+  { date: (y - 1) + '-11-09', label: 'Director reviews begin' },
+  { date: (y - 1) + '-12-04', label: 'Revisions due' },
+  { date: (y - 1) + '-12-11', label: 'All plans approved' }
+];
+const shiftYear = (d, n) => d ? d.replace(/^\d{4}/, m => String(+m + n)) : d;
+const YEARS = [2026, 2027, 2028, 2029, 2030, 2031];
+const AREAS = [
+  { id: 'foh', name: 'FOH Operations', leader: 'Jordan Ellis', metrics: ['DT departure time', 'OSAT', 'Order accuracy', 'Face-to-face ordering %', 'Guest recovery rate'] },
+  { id: 'boh', name: 'BOH Operations', leader: 'Marcus Reed', metrics: ['Food cost gap', 'Waste $ per week', 'Cook-to-demand accuracy', 'Ticket time'] },
+  { id: 'inv', name: 'Inventory', leader: 'Unassigned', metrics: ['Inventory variance', 'Count accuracy', 'Days of inventory on hand', 'Stockouts per month'] },
+  { id: 'fac', name: 'Facilities & Equipment', leader: 'Sam Ortiz', metrics: ['Equipment downtime', 'Preventive maintenance completion %', 'Repair & maintenance $', 'Work order close time', 'Utility cost'] },
+  { id: 'cat', name: 'Catering', leader: 'Unassigned', metrics: ['Catering sales', 'Catering orders per week', 'On-time delivery %', 'Catering OSAT', 'Repeat catering guests'] },
+  { id: 'admin', name: 'Admin', leader: 'Priya Shah', metrics: ['Labor productivity', 'Labor %', 'Schedule accuracy', 'Cash variance', 'Payroll accuracy'] },
+  { id: 'talent', name: 'Talent Management', leader: 'Dana Brooks', metrics: ['Retention', '90-day retention', 'Time to hire', 'Applicant flow', 'Engagement score'] },
+  { id: 'fsafe', name: 'Food Safety', leader: 'Luis Moreno', metrics: ['Food Safety score', 'Temp log compliance', 'Critical violations', 'Certification %'] },
+  { id: 'mkt', name: 'Marketing', leader: 'Tasha Green', metrics: ['Sales growth', 'Daily transactions', 'Digital / app mix', 'Community events'] },
+  { id: 'train', name: 'Training', leader: 'Chris Allen', metrics: ['Certification completion', 'Time to proficiency', 'Certified trainers', 'Leadership pipeline'] }
+];
+const RES = ['Time', 'Tools / equipment', 'People / hiring', 'Budget', 'Training', 'Operator support'];
+const QS = ['Q1', 'Q2', 'Q3', 'Q4'];
+const QMONTH = { Q1: 'first week of April', Q2: 'first week of July', Q3: 'first week of October', Q4: 'first week of January' };
+const STEPS = ['Reflect', 'Priorities', 'Action plan', 'Support', 'Review & submit'];
+const STATUS_TONE = { 'Not started': 'neutral', Draft: 'neutral', Submitted: 'navy', 'Director approved': 'navy', Approved: 'green', 'Needs revision': 'yellow' };
+const CI_TONE = { 'On track': 'green', 'At risk': 'yellow', 'Off track': 'red' };
+const CI_COL = { 'On track': 'var(--cfa-green)', 'At risk': 'var(--cfa-yellow)', 'Off track': 'var(--cfa-red)' };
+
+const blankGoal = () => ({ priority: '', goalIds: [], statement: '', metric: '', baseline: '', target: '', deadline: '', why: '', actions: [{ text: '', owner: '', due: '' }], ms: ['', '', '', ''], res: [], resNote: '', training: false, trainingNote: '', deps: [], depNote: '', risks: '', fin: 'none', finAmt: '', finWhy: '' });
+const mk = o => Object.assign(blankGoal(), o);
+const plan = o => Object.assign({ status: 'Draft', lessons: ['', ''], stop: '', recog: '', sustain: '', excite: '', goals: [], feedback: [], checkins: {} }, o);
+
+const fmt = d => { if (!d) return '—'; const t = new Date(d + 'T00:00'); return isNaN(t) ? d : t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); };
+const priById = id => PRI.find(p => p.id === id);
+const areaById = id => AREAS.find(a => a.id === id);
+
+function checksFor(p, areaId) {
+  const g = p.goals, has = g.length > 0;
+  const all = f => has && g.every(f);
+  const asg = assignedTo(areaId);
+  const out = [];
+  if (asg.length) out.push({ label: 'Built out each assigned priority: ' + asg.map(x => x.name).join(', '), ok: asg.every(pr => g.some(x => x.priority === pr.id)) });
+  else out.push({ label: 'At least one priority', ok: has });
+  if (g.some(x => x.priority === 'own')) out.push({ label: 'Your own priority supports a goal', ok: g.filter(x => x.priority === 'own').every(x => (x.goalIds || []).some(id => GOALS.some(G => G.id === id))) });
+  return out.concat([
+    { label: 'Two lessons learned from ' + (YEAR - 1), ok: p.lessons.every(l => l.trim()) },
+    { label: 'Statement written for each priority', ok: all(x => x.statement.trim()) },
+    { label: 'Metric, baseline and target for each priority', ok: all(x => x.metric && x.baseline.trim() && x.target.trim()) },
+    { label: 'Target date for each priority', ok: all(x => x.deadline) },
+    { label: 'At least one action with an owner', ok: all(x => x.actions.some(a => a.text.trim() && a.owner.trim())) },
+    { label: 'All four quarterly milestones', ok: all(x => x.ms.every(m => m.trim())) },
+    { label: 'Dollar estimate where there is $ impact', ok: all(x => x.fin === 'none' || x.finAmt.trim()) },
+    { label: 'Team recognition plan', ok: !!p.recog.trim() }
+  ]);
+}
+const checkView = c => ({ label: c.label, mark: c.ok ? '✓' : '', bg: c.ok ? 'var(--cfa-green)' : 'var(--surface-subtle)', fg: '#fff', text: c.ok ? 'var(--text-primary)' : 'var(--text-secondary)' });
+const statusChips = (cur, onPick) => ['On track', 'At risk', 'Off track'].map(label => { const on = cur === label, col = CI_COL[label]; return { label, border: on ? col : 'var(--border-default)', bg: on ? col : '#fff', fg: on && label !== 'At risk' ? '#fff' : 'var(--text-primary)', onClick: () => onPick(label) }; });
+
+class Component extends DCLogic {
+  gsiRef = React.createRef();
+  state = { auth: 'loading', authError: '', user: null, saving: '', role: 'leader', view: 'why', area: 'foh', step: 0, quarter: 'Q1', reviewArea: 'foh', reviewNote: '', toast: null,
+    plans: Object.fromEntries(AREAS.map(a => [a.id, plan({ status: 'Not started' })])), goals: [], priorities: clone(DEFAULT_PRI), goalReviews: {}, directors: [], year: 2027, calendar: defaultCalendar(2027), years: [],
+    areaMetrics: Object.fromEntries(AREAS.map(a => [a.id, a.metrics.slice()])), metricDraft: {} };
+
+  cfg = () => window.GP_CONFIG || {};
+  componentDidMount() { this.boot(); }
+  loadScript = src => new Promise((res, rej) => { if (window.google && window.google.accounts) return res(); const el = document.createElement('script'); el.src = src; el.async = true; el.onload = res; el.onerror = () => rej(new Error('Could not load Google Sign-In.')); document.head.appendChild(el); });
+  boot = async () => {
+    try {
+      const demo = new URLSearchParams(location.search).get('demo');
+      if (demo) return this.startDemo(demo);
+      const c = this.cfg();
+      if (!c.API_URL || !c.CLIENT_ID || /PASTE/.test(c.API_URL + c.CLIENT_ID)) return this.setState({ auth: 'signedout', authError: 'This app is not configured yet. Add API_URL and CLIENT_ID to config.js.' });
+      await this.loadScript('https://accounts.google.com/gsi/client');
+      google.accounts.id.initialize({ client_id: c.CLIENT_ID, callback: r => this.onCredential(r.credential), auto_select: true, hd: c.DOMAIN, cancel_on_tap_outside: false });
+      const tok = sessionStorage.getItem('gp_token');
+      if (tok && this.tokenValid(tok)) { this.token = tok; return this.bootstrap(); }
+      this.showSignIn();
+    } catch (e) { this.setState({ auth: 'signedout', authError: e.message }); }
+  };
+  startDemo = kind => {
+    this.demo = true;
+    const role = ['operator', 'director'].includes(kind) ? kind : 'leader';
+    const user = role === 'operator' ? { name: 'Alan Thompson', email: 'alan.thompson@cfafttotten.com', role: 'Operator', areas: [] }
+      : role === 'director' ? { name: 'Abby', email: 'abby@cfafttotten.com', role: 'Director', area: 'foh', areas: ['foh', 'train', 'fsafe'] }
+      : { name: 'Jordan Ellis', email: 'jordan@cfafttotten.com', role: 'Leader', area: 'foh', areas: ['foh'] };
+    const priorities = clone(DEFAULT_PRI).map(p => Object.assign(p, { goalIds: DEMO_LINKS[p.id] || [] }));
+    this.setState({ auth: 'ready', user, role, area: user.area || 'foh', reviewArea: role === 'director' ? 'foh' : 'foh', view: role === 'leader' ? 'why' : 'dash', goals: clone(DEMO_GOALS), priorities, directors: DEMO_DIRECTORS, saving: 'Demo mode · changes are not saved' });
+  };
+  demoApi = async (action, d) => {
+    const pl = d.plan ? clone(d.plan) : d.area ? clone(this.state.plans[d.area]) : null;
+    if (action === 'submitPlan') { pl.status = 'Submitted'; return { plan: pl }; }
+    if (action === 'submitCheckin') { pl.checkins[d.quarter] = Object.assign({ items: [] }, pl.checkins[d.quarter], { submitted: true }); return { plan: pl }; }
+    if (action === 'review') { pl.status = d.decision === 'Approved' ? (this.state.role === 'director' ? 'Director approved' : 'Approved') : 'Needs revision'; if (this.state.role === 'director' && d.decision === 'Approved') pl.directorApprovedBy = this.state.user.name; if (d.note) pl.feedback.push({ label: this.state.role === 'director' ? 'Director' : 'Operator', text: d.note }); return { plan: pl }; }
+    if (action === 'switchYear') return { settings: Object.assign({ year: d.year }, d.seed), plans: {}, years: [], created: true };
+    return {};
+  };
+  tokenValid = t => { try { const p = JSON.parse(atob(t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); return p.exp * 1000 > Date.now() + 60000; } catch (e) { return false; } };
+  showSignIn = msg => {
+    this.token = null; try { sessionStorage.removeItem('gp_token'); } catch (e) {}
+    this.setState({ auth: 'signedout', authError: msg || '' }, () => {
+      if (window.google && google.accounts && this.gsiRef.current) {
+        this.gsiRef.current.innerHTML = '';
+        google.accounts.id.renderButton(this.gsiRef.current, { theme: 'outline', size: 'large', shape: 'pill', text: 'signin_with', width: 260 });
+        if (!msg) google.accounts.id.prompt();
+      }
+    });
+  };
+  onCredential = cred => { this.token = cred; try { sessionStorage.setItem('gp_token', cred); } catch (e) {} this.setState({ auth: 'loading', authError: '' }); this.bootstrap(); };
+  signOut = () => { if (this.demo) { location.search = ''; return; } try { google.accounts.id.disableAutoSelect(); } catch (e) {} this.showSignIn(); };
+
+  api = async (action, data) => {
+    if (this.demo) return this.demoApi(action, data || {});
+    if (!this.token || !this.tokenValid(this.token)) { this.showSignIn('Your session expired. Please sign in again.'); throw new Error('expired'); }
+    let j;
+    try {
+      const res = await fetch(this.cfg().API_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action, token: this.token }, data || {})) });
+      j = await res.json();
+    } catch (e) { throw new Error('Could not reach the planning server. Check your connection and try again.'); }
+    if (!j.ok) {
+      if (j.code === 'auth') { this.showSignIn(j.error); throw new Error('expired'); }
+      if (j.code === 'denied') { this.setState({ auth: 'denied', authError: j.error }); throw new Error('expired'); }
+      throw new Error(j.error || 'Request failed');
+    }
+    return j;
+  };
+  fail = e => { this.setState({ saving: '' }); if (e.message !== 'expired') this.toast('Something went wrong', e.message, 'error'); };
+
+  applyData = j => {
+    if (j.leaders) AREAS.forEach(a => { a.leader = j.leaders[a.id] || 'Unassigned'; });
+    const plans = Object.fromEntries(AREAS.map(a => [a.id, plan(Object.assign({ status: 'Not started' }, (j.plans || {})[a.id] || {}))]));
+    const st = j.settings || {}, y = st.year || this.state.year;
+    this.setState({ plans, year: y, goals: st.goals || [], priorities: st.priorities || this.state.priorities, goalReviews: st.goalReviews || {}, calendar: st.calendar || defaultCalendar(y), areaMetrics: Object.assign(Object.fromEntries(AREAS.map(a => [a.id, a.metrics.slice()])), st.areaMetrics || {}), years: j.years || this.state.years, directors: j.directors || this.state.directors });
+  };
+  bootstrap = async () => {
+    try {
+      const j = await this.api('bootstrap');
+      this.applyData(j);
+      const role = j.user.role === 'Operator' ? 'operator' : j.user.role === 'Director' ? 'director' : 'leader';
+      const areas = j.user.areas || [];
+      this.setState({ auth: 'ready', user: j.user, role, area: j.user.area || 'foh', reviewArea: role === 'director' && areas[0] ? areas[0] : 'foh', view: role === 'leader' ? 'why' : 'dash' });
+    } catch (e) { if (e.message !== 'expired') this.setState({ auth: 'signedout', authError: e.message }); }
+  };
+
+  settingsPayload = () => ({ goals: this.state.goals, priorities: this.state.priorities, calendar: this.state.calendar, goalReviews: this.state.goalReviews, areaMetrics: this.state.areaMetrics });
+  queue = (kind, area) => {
+    if (this.demo) return;
+    this._q = this._q || {};
+    this._q[kind === 'plan' ? 'plan:' + area : 'settings'] = true;
+    this.setState({ saving: 'Saving…' });
+    clearTimeout(this._qt); this._qt = setTimeout(this.flush, 1200);
+  };
+  flush = async () => {
+    const q = this._q || {}; this._q = {};
+    try {
+      for (const k of Object.keys(q)) {
+        if (k === 'settings') await this.api('saveSettings', { year: this.state.year, settings: this.settingsPayload() });
+        else { const a = k.slice(5); await this.api('savePlan', { year: this.state.year, area: a, plan: this.state.plans[a] }); }
+      }
+      this.setState({ saving: 'All changes saved' });
+    } catch (e) { this.fail(e); }
+  };
+  cancelQueue = () => { clearTimeout(this._qt); this._q = {}; };
+  setPlan = (area, pl) => this.setState(st => ({ plans: Object.assign({}, st.plans, { [area]: plan(pl) }), saving: this.demo ? st.saving : 'All changes saved' }));
+  call = async (action, data, area, done) => {
+    this.cancelQueue(); if (!this.demo) this.setState({ saving: 'Sending…' });
+    try { const j = await this.api(action, Object.assign({ year: this.state.year, area }, data)); if (j.plan) this.setPlan(area, j.plan); done && done(j); } catch (e) { this.fail(e); }
+  };
+
+  persist = () => this.queue('settings');
+  upd = (patch) => this.setState(patch);
+  mut = (area, fn) => this.setState(st => { const plans = clone(st.plans); fn(plans[area]); return { plans }; }, () => { if (this.state.role === 'leader') this.queue('plan', area); });
+  toast = (title, body, tone) => { this.setState({ toast: { title, body, tone: tone || 'success' } }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: null }), 4200); };
+  tx = (area, fn) => e => { const v = e && e.target ? e.target.value : e; this.mut(area, p => fn(p, v)); };
+  ensureAssigned = () => {
+    const s = this.state, a = s.area, pl = s.plans[a];
+    if (s.role !== 'leader' || LOCKED.includes(pl.status)) return;
+    const miss = assignedTo(a).filter(pr => !pl.goals.some(x => x.priority === pr.id));
+    if (!miss.length && pl.status !== 'Not started') return;
+    this.mut(a, p => { miss.forEach(pr => p.goals.push(mk({ priority: pr.id }))); if (p.status === 'Not started') p.status = 'Draft'; });
+  };
+  goToStep = n => { if (n >= 1) this.ensureAssigned(); this.upd({ view: 'plan', step: n }); window.scrollTo(0, 0); };
+
+  goalView(areaId, g, i) {
+    const T = fn => this.tx(areaId, (p, v) => fn(p.goals[i], v));
+    const isOwn = g.priority === 'own';
+    const pri = isOwn ? null : priById(g.priority);
+    const asgIds = assignedTo(areaId).map(x => x.id);
+    const orphan = !isOwn && (!pri || !asgIds.includes(pri.id));
+    const priName = isOwn ? 'Your own priority' : pri ? (pri.name || 'Untitled priority') : 'Priority removed';
+    const toggle = (key, val) => () => this.mut(areaId, p => { const arr = p.goals[i][key] = p.goals[i][key] || []; const k = arr.indexOf(val); k >= 0 ? arr.splice(k, 1) : arr.push(val); });
+    const finOpts = [['none', 'No direct $ impact'], ['sales', 'Increases sales'], ['cost', 'Decreases costs']];
+    const fin = finOpts.find(f => f[0] === g.fin);
+    const dn = dirNames(areaId);
+    return {
+      ...g, n: i + 1, priName, isOwn, isAssigned: !isOwn,
+      eyebrow: 'Priority ' + (i + 1) + ' · ' + priName,
+      srcLine: isOwn ? 'Priority ' + (i + 1) + ' · Your own' : 'Priority ' + (i + 1) + ' · Assigned' + (dn ? ' by ' + dn : ''),
+      orphan, orphanMsg: pri ? 'This priority is no longer assigned to your area. You can remove it.' : 'This priority was removed from the plan. You can remove it.',
+      assignedLine: pri ? [pri.metric, (pri.baseline ? pri.baseline + ' → ' : '') + 'Target ' + (pri.target || '—')].filter(Boolean).join(' · ') : '',
+      goalLine: goalsLine(goalIdsOf(g)),
+      goalChips: GOALS.map((G, k) => ({ label: 'Goal ' + (k + 1) + ': ' + (G.statement || 'Untitled'), tone: (g.goalIds || []).includes(G.id) ? 'red' : 'neutral', onClick: toggle('goalIds', G.id) })),
+      statementOr: g.statement || 'Priority statement not written yet',
+      metricOr: g.metric || '—',
+      baseline: g.baseline || '—', target: g.target || '—',
+      metricLine: [g.metric, (g.baseline || '?') + ' → ' + (g.target || '?'), 'by ' + fmt(g.deadline)].filter(Boolean).join(' · '),
+      deadlineFmt: fmt(g.deadline),
+      risks: g.risks || '—',
+      canRemove: isOwn || orphan,
+      remove: () => this.mut(areaId, p => p.goals.splice(i, 1)),
+      metricChips: (this.state.areaMetrics[areaId] || []).map(m => ({ label: m, tone: g.metric === m ? 'red' : 'neutral', onClick: () => this.mut(areaId, pl => { pl.goals[i].metric = m; }) })),
+      resChips: RES.map(r => ({ label: r, tone: g.res.includes(r) ? 'red' : 'neutral', onClick: toggle('res', r) })),
+      depChips: AREAS.filter(a => a.id !== areaId).map(a => ({ label: a.name, tone: g.deps.includes(a.id) ? 'red' : 'neutral', onClick: toggle('deps', a.id) })),
+      finChips: finOpts.map(([id, label]) => ({ label, tone: g.fin === id ? 'red' : 'neutral', onClick: () => this.mut(areaId, pl => { pl.goals[i].fin = id; }) })),
+      showFin: g.fin !== 'none',
+      finLine: g.fin === 'none' ? 'No direct $ impact' : (g.finAmt || 'Estimate missing') + ' ' + (fin ? fin[1].toLowerCase() : ''),
+      resLine: [g.res.join(', '), g.resNote].filter(Boolean).join(' — ') || '—',
+      depLine: g.deps.length ? g.deps.map(d => (areaById(d) || { name: d }).name).join(', ') + (g.depNote ? ' — ' + g.depNote : '') : 'None',
+      actionsV: g.actions.map((a, j) => ({ ...a, n: j + 1, dueFmt: fmt(a.due), owner: a.owner, on: { text: T((x, v) => { x.actions[j].text = v; }), owner: T((x, v) => { x.actions[j].owner = v; }), due: T((x, v) => { x.actions[j].due = v; }) }, remove: () => this.mut(areaId, p => { const ac = p.goals[i].actions; if (ac.length > 1) ac.splice(j, 1); else ac[0] = { text: '', owner: '', due: '' }; }) })),
+      addAction: () => this.mut(areaId, p => p.goals[i].actions.push({ text: '', owner: '', due: '' })),
+      msV: g.ms.map((m, k) => ({ q: QS[k], label: QS[k] + ' milestone', val: m || (this.state.view === 'plan' ? '' : '—'), ph: k === 3 ? 'Year-end number' : 'Number by end of ' + QS[k], on: T((x, v) => { x.ms[k] = v; }) })),
+      on: {
+        statement: T((x, v) => { x.statement = v; }), baseline: T((x, v) => { x.baseline = v; }), target: T((x, v) => { x.target = v; }), deadline: T((x, v) => { x.deadline = v; }), why: T((x, v) => { x.why = v; }),
+        resNote: T((x, v) => { x.resNote = v; }), trainingNote: T((x, v) => { x.trainingNote = v; }), depNote: T((x, v) => { x.depNote = v; }), risks: T((x, v) => { x.risks = v; }),
+        finAmt: T((x, v) => { x.finAmt = v; }), finWhy: T((x, v) => { x.finWhy = v; }),
+        training: v => this.mut(areaId, p => { p.goals[i].training = !!v; })
+      }
+    };
+  }
+
+  mutCal = fn => this.setState(st => { const calendar = clone(st.calendar); fn(calendar); return { calendar }; }, this.persist);
+  mutPri = fn => this.setState(st => { const priorities = clone(st.priorities); fn(priorities); return { priorities }; }, this.persist);
+  mutGoals = fn => this.setState(st => { const goals = clone(st.goals); fn(goals); return { goals }; }, this.persist);
+  mutRev = fn => this.setState(st => { const goalReviews = clone(st.goalReviews); fn(goalReviews); return { goalReviews }; }, this.persist);
+  switchYear = async y => {
+    y = +y; const s = this.state; if (y === s.year) return;
+    this.cancelQueue(); this.setState({ saving: 'Loading ' + y + '…' });
+    try {
+      const seed = { goals: s.goals, goalReviews: {}, priorities: s.priorities.map(p => Object.assign({}, p, { baseline: '' })), calendar: s.calendar.map(c => Object.assign({}, c, { date: shiftYear(c.date, y - s.year) })), areaMetrics: s.areaMetrics };
+      const j = await this.api('switchYear', { year: y, seed });
+      this.applyData(j); this.setState({ step: 0, quarter: 'Q1', saving: this.demo ? s.saving : '' });
+      this.toast(y + ' plan year selected', j.created ? 'Goals and priorities carried over from ' + s.year + '. Leader plans start fresh.' : 'Loaded the saved ' + y + ' plans.');
+    } catch (e) { this.fail(e); }
+  };
+
+  renderVals() {
+    const s = this.state;
+    PRI = s.priorities; GOALS = s.goals; DIRS = s.directors; YEAR = s.year;
+    const role = s.role, isLeader = role === 'leader', isOperator = role === 'operator', isDirector = role === 'director';
+    const me = s.user || {};
+    const myAreas = isDirector ? (me.areas || []) : [];
+    const myAreaNames = myAreas.map(id => (areaById(id) || { name: id }).name);
+    const canEditPri = pr => isOperator || (isDirector && (pr.by === me.email || (ownersOf(pr).length > 0 && ownersOf(pr).every(o => myAreas.includes(o)))));
+    const year = s.year, prevYear = s.year - 1;
+
+    const goalCards = GOALS.map((G, k) => ({ n: k + 1, statement: G.statement || 'Untitled goal', measure: G.measure || 'Measure of success to come', target: G.target || '—' }));
+    const goalEdit = GOALS.map((G, k) => {
+      const nPri = PRI.filter(p => (p.goalIds || []).includes(G.id)).length;
+      const F = key => e => { const v = e.target.value; this.mutGoals(gs => { gs[k][key] = v; }); };
+      return { ...G, n: k + 1, linked: nPri ? 'Supported by ' + nPri + (nPri === 1 ? ' priority' : ' priorities') : 'No priorities support this goal yet', linkedColor: nPri ? 'var(--text-secondary)' : 'var(--cfa-red)',
+        on: { statement: F('statement'), measure: F('measure'), target: F('target') },
+        remove: () => { this.mutGoals(gs => gs.splice(k, 1)); this.toast('Goal removed', 'Priorities linked to it will need another goal.'); } };
+    });
+
+    const P = (i, k) => e => { const v = e.target.value; this.mutPri(ps => { ps[i][k] = v; }); };
+    const priV = s.priorities.map((pr, i) => {
+      const linked = AREAS.filter(a => s.plans[a.id].goals.some(g => g.priority === pr.id)).map(a => a.name);
+      const own = ownersOf(pr), editable = canEditPri(pr);
+      const dirs = Array.from(new Set(own.map(dirNames).filter(Boolean)));
+      const chipAreas = isOperator ? AREAS : AREAS.filter(a => myAreas.includes(a.id));
+      const gIds = (pr.goalIds || []).filter(id => GOALS.some(G => G.id === id));
+      return { ...pr, n: i + 1, editable, readOnly: !editable, noOwner: own.length === 0, noGoal: gIds.length === 0,
+        manageLine: dirs.length ? 'Director: ' + dirs.join(', ') : own.length ? 'Operator' : 'No lead area yet',
+        nameOr: pr.name || 'Untitled priority', metricOr: pr.metric || '—', baselineOr: pr.baseline || 'Baseline to come', targetOr: pr.target || '—',
+        goalNames: goalsLine(gIds), ownerNames: own.length ? 'Lead: ' + own.map(id => (areaById(id) || { name: id }).name).join(', ') : 'No lead area',
+        goalChips: GOALS.map((G, k) => ({ label: 'Goal ' + (k + 1) + ': ' + (G.statement || 'Untitled'), tone: gIds.includes(G.id) ? 'red' : 'neutral', onClick: () => this.mutPri(ps => { const a = ps[i].goalIds = (ps[i].goalIds || []).slice(); const j = a.indexOf(G.id); j >= 0 ? a.splice(j, 1) : a.push(G.id); }) })),
+        ownerChips: chipAreas.map(a => ({ label: a.name, tone: own.includes(a.id) ? 'red' : 'neutral', onClick: () => this.mutPri(ps => { const o = ownersOf(ps[i]).slice(); const k = o.indexOf(a.id); k >= 0 ? o.splice(k, 1) : o.push(a.id); ps[i].owners = o; delete ps[i].owner; if (isDirector && !ps[i].by) ps[i].by = me.email; }) })),
+        linkedLabel: linked.length ? 'Built out by ' + linked.join(', ') : 'Not built out yet', linkedColor: linked.length ? 'var(--text-secondary)' : 'var(--cfa-red)',
+        on: { name: P(i, 'name'), metric: P(i, 'metric'), baseline: P(i, 'baseline'), target: P(i, 'target') },
+        remove: () => { this.mutPri(ps => ps.splice(i, 1)); this.toast('Priority removed', linked.length ? 'Leaders who built it out can remove it from their plans.' : 'Leaders will no longer see it.'); } };
+    });
+    const priList = s.priorities.map(pr => ({ name: pr.name || 'Untitled priority', metric: pr.metric || '—', goals: goalsLine(pr.goalIds), target: pr.target || '—', owner: ownersOf(pr).map(id => (areaById(id) || { name: id }).name).join(', ') || 'Not assigned' }));
+
+    const areaId = s.area, area = areaById(areaId) || AREAS[0], p = s.plans[areaId];
+    const goalsRaw = p.goals.map((g, i) => this.goalView(areaId, g, i));
+    const goalsV = goalsRaw.map((g, i) => s.view === 'plan' ? Object.assign({}, g, { baseline: p.goals[i].baseline, target: p.goals[i].target, risks: p.goals[i].risks }) : g);
+    const checks = checksFor(p, areaId);
+    const myAssigned = assignedTo(areaId);
+    const complete = checks.every(c => c.ok);
+    const L = (k) => this.tx(areaId, (pl, v) => { pl[k] = v; });
+
+    const qi = QS.indexOf(s.quarter);
+    const ci = (p.checkins[s.quarter] || { items: [] });
+    const ciV = p.goals.map((g, i) => {
+      const it = ci.items[i] || {};
+      const setCi = (k) => e => { const v = e.target.value; this.mut(areaId, pl => { const c = pl.checkins[s.quarter] = pl.checkins[s.quarter] || { items: [] }; c.items[i] = Object.assign({}, c.items[i], { [k]: v }); }); };
+      return {
+        n: i + 1, eyebrow: goalsRaw[i].eyebrow, goalLine: goalsRaw[i].goalLine, statement: g.statement || '—', baseline: g.baseline || '—', target: g.target || '—', metric: g.metric || 'Current number', milestone: g.ms[qi] || '—',
+        value: it.value || '', note: it.note || '', blocker: it.blocker || '',
+        on: { value: setCi('value'), note: setCi('note'), blocker: setCi('blocker') },
+        statusChips: statusChips(it.status, label => this.mut(areaId, pl => { const c = pl.checkins[s.quarter] = pl.checkins[s.quarter] || { items: [] }; c.items[i] = Object.assign({}, c.items[i], { status: label }); }))
+      };
+    });
+
+    // dashboard
+    const statuses = AREAS.map(a => s.plans[a.id].status);
+    const cnt = st => statuses.filter(x => x === st).length;
+    const latestCi = pl => { for (let k = 3; k >= 0; k--) { const c = pl.checkins[QS[k]]; if (c && c.submitted) { const sts = c.items.map(x => x && x.status).filter(Boolean); const worst = sts.includes('Off track') ? 'Off track' : sts.includes('At risk') ? 'At risk' : 'On track'; return { q: QS[k], st: worst }; } } return null; };
+    const areaRows = AREAS.map(a => {
+      const pl = s.plans[a.id], ch = checksFor(pl, a.id), ok = ch.filter(c => c.ok).length, lc = latestCi(pl), dn = dirNames(a.id);
+      return { name: a.name, leader: a.leader + (dn ? ' · Director: ' + dn : ''), status: pl.status, tone: STATUS_TONE[pl.status], goals: pl.goals.length, score: ok + '/' + ch.length, pct: Math.round(ok / ch.length * 100) + '%', barColor: ok === ch.length ? 'var(--cfa-green)' : ok >= 6 ? 'var(--cfa-navy)' : 'var(--cfa-yellow)', hasCi: !!lc, noCi: !lc, ci: lc ? lc.q + ' · ' + lc.st : '', ciTone: lc ? CI_TONE[lc.st] : 'neutral', review: () => this.upd({ view: 'review', reviewArea: a.id, reviewNote: '' }) };
+    });
+    const priCards = PRI.map(pr => {
+      const areas = AREAS.filter(a => s.plans[a.id].goals.some(g => g.priority === pr.id)).map(a => a.name);
+      const owners = ownersOf(pr), missing = owners.filter(id => s.plans[id] && !s.plans[id].goals.some(g => g.priority === pr.id)).map(id => areaById(id).name);
+      return { hasMissing: missing.length > 0, missingLine: 'Not built out yet: ' + missing.join(', '), leadLine: owners.length ? 'Lead: ' + owners.map(id => (areaById(id) || { name: id }).name).join(', ') : 'No lead area assigned', goalLine: goalsLine(pr.goalIds), name: pr.name || 'Untitled priority', target: (pr.baseline ? pr.baseline + ' → ' : '') + (pr.target || '—'), areas, uncovered: areas.length === 0, accent: areas.length && !missing.length ? 'var(--cfa-navy)' : 'var(--cfa-red)' };
+    });
+
+    // goal review
+    const rev = s.goalReviews[s.quarter] || {};
+    const goalRev = GOALS.map((G, k) => {
+      const rows = [];
+      AREAS.forEach(a => { const pl = s.plans[a.id], c = pl.checkins[s.quarter]; pl.goals.forEach((it, j) => {
+        if (!goalIdsOf(it).includes(G.id)) return;
+        const ciIt = c && c.submitted ? c.items[j] : null, status = (ciIt && ciIt.status) || 'No update';
+        rows.push({ area: a.name, pri: it.priority === 'own' ? 'Own priority' : ((priById(it.priority) || {}).name || 'Priority'), statement: it.statement || 'Statement not written yet', status, tone: CI_TONE[status] || 'neutral' });
+      }); });
+      const tally = ['On track', 'At risk', 'Off track', 'No update'].map(label => ({ label, n: rows.filter(r => r.status === label).length, color: CI_COL[label] || 'var(--text-secondary)' }));
+      const sc = rev[G.id] || {};
+      return { n: k + 1, statement: G.statement || 'Untitled goal', measure: G.measure || 'Measure to come', target: G.target || '—', rows, noRows: rows.length === 0, tally,
+        canScore: isOperator, readOnly: !isOperator, note: sc.note || '', scoreLabel: sc.status || 'Not scored yet', scoreTone: CI_TONE[sc.status] || 'neutral', noteOr: sc.note || '',
+        scoreChips: statusChips(sc.status, label => this.mutRev(r => { const q = r[s.quarter] = r[s.quarter] || {}; q[G.id] = Object.assign({}, q[G.id], { status: label }); })),
+        onNote: e => { const v = e.target.value; this.mutRev(r => { const q = r[s.quarter] = r[s.quarter] || {}; q[G.id] = Object.assign({}, q[G.id], { note: v }); }); } };
+    });
+
+    // review
+    const rA = areaById(s.reviewArea), rP = s.plans[s.reviewArea], rChecks = checksFor(rP, s.reviewArea);
+    const rDir = dirNames(s.reviewArea), meDir = isDirector && myAreas.includes(s.reviewArea), rst = rP.status;
+    let canAct = false, approveLabel = 'Approve Plan', stageLine = '';
+    if (isOperator) {
+      canAct = rst === 'Submitted' || rst === 'Director approved'; approveLabel = 'Give Final Approval';
+      if (rst === 'Submitted' && rDir) stageLine = 'Waiting on ' + rDir + "'s review. You can still approve it directly.";
+      if (rst === 'Director approved') stageLine = 'Approved by ' + (rP.directorApprovedBy || rDir || 'the Director') + '. Ready for your final approval.';
+    } else if (meDir) {
+      canAct = rst === 'Submitted'; approveLabel = 'Approve and Send to Operator';
+      if (rst === 'Director approved') stageLine = 'You approved this plan. It is with the Operator for final approval.';
+    } else if (isDirector) stageLine = 'Only ' + (rDir ? rDir + ' or ' : '') + 'the Operator can review this plan.';
+    if (!stageLine) stageLine = { 'Not started': 'This plan has not been started.', Draft: 'This plan has not been submitted yet.', Approved: 'This plan is approved.', 'Needs revision': 'Sent back to the leader for changes.', Submitted: 'Ready for your review.' }[rst] || '';
+    const rv = {
+      name: rA.name, leader: rA.leader + (rDir ? ' · Director: ' + rDir : ''), leaderShort: rA.leader, status: rst, tone: STATUS_TONE[rst], empty: rP.goals.length === 0,
+      goals: rP.goals.map((g, i) => this.goalView(s.reviewArea, g, i)),
+      checks: rChecks.map(checkView), feedback: rP.feedback, approveLabel, stageLine,
+      cannotAct: !canAct || rP.goals.length === 0, cannotRevise: !canAct || rP.goals.length === 0 || !s.reviewNote.trim()
+    };
+
+    const tabItems = isLeader ? [{ id: 'why', label: 'Why We Plan' }, { id: 'plan', label: 'My Plan' }, { id: 'checkin', label: 'Quarterly Check-in' }, { id: 'print', label: 'One-Page Plan' }]
+      : [{ id: 'dash', label: 'All Areas' }, { id: 'review', label: 'Review Plans' }, { id: 'goals', label: 'Goal Review' }, { id: 'priorities', label: isOperator ? 'Plan Settings' : 'Priorities' }];
+    const calSorted = s.calendar.map((c, i) => ({ c, i })).sort((a, b) => (a.c.date || '9999').localeCompare(b.c.date || '9999'));
+    const calendarV = calSorted.map(({ c }) => ({ dateFmt: c.date ? new Date(c.date + 'T00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Date TBD', label: c.label || '—' }));
+    const lastCal = calSorted.length ? calSorted[calSorted.length - 1].c : null;
+    const dueFmt = lastCal && lastCal.date ? new Date(lastCal.date + 'T00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : 'date TBD';
+    const dueShort = lastCal && lastCal.date ? new Date(lastCal.date + 'T00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'TBD';
+    const calEdit = s.calendar.map((c, i) => ({ ...c, n: i + 1,
+      on: { date: e => { const v = e.target.value; this.mutCal(cs => { cs[i].date = v; }); }, label: e => { const v = e.target.value; this.mutCal(cs => { cs[i].label = v; }); } },
+      remove: () => this.mutCal(cs => cs.splice(i, 1)) }));
+    const mutMetrics = (id, fn) => this.setState(st => { const areaMetrics = clone(st.areaMetrics); areaMetrics[id] = areaMetrics[id] || []; fn(areaMetrics[id]); return { areaMetrics }; }, this.persist);
+    const metricAreas = AREAS.map(a => {
+      const list = s.areaMetrics[a.id] || [], draft = s.metricDraft[a.id] || '';
+      const add = () => { const v = (this.state.metricDraft[a.id] || '').trim(); if (!v) return; mutMetrics(a.id, l => { if (!l.includes(v)) l.push(v); }); this.setState(st => ({ metricDraft: Object.assign({}, st.metricDraft, { [a.id]: '' }) })); };
+      return { name: a.name, count: list.length + (list.length === 1 ? ' metric' : ' metrics'), empty: list.length === 0,
+        chips: list.map((m, j) => ({ label: m, remove: () => mutMetrics(a.id, l => l.splice(j, 1)) })),
+        draft, onDraft: e => { const v = e.target.value; this.setState(st => ({ metricDraft: Object.assign({}, st.metricDraft, { [a.id]: v }) })); },
+        onKey: e => { if (e.key === 'Enter') add(); }, add };
+    });
+    const fb = p.feedback[p.feedback.length - 1];
+    const hasOwn = p.goals.some(g => g.priority === 'own');
+    const dn = dirNames(areaId);
+
+    return {
+      isLeader, isOperator, isDirector, notLeader: !isLeader,
+      roleEyebrow: isOperator ? 'Operator view' : 'Director view · ' + myAreaNames.join(', '),
+      tabItems, view: s.view, setView: v => { if (v === 'plan' && s.step >= 1) this.ensureAssigned(); this.upd({ view: v }); },
+      year, prevYear, calendarV, calEdit, dueFmt, dueShort,
+      yearOptions: YEARS.map(y => ({ id: String(y), label: y + (y === s.year ? ' (current)' : s.years.includes(y) ? ' (saved)' : '') })), yearStr: String(s.year),
+      setYear: e => this.switchYear(e.target.value),
+      addCal: () => this.mutCal(cs => cs.push({ date: '', label: '' })),
+      resetCal: () => { this.mutCal(cs => { cs.splice(0, cs.length, ...defaultCalendar(s.year)); }); this.toast('Schedule reset', 'Default dates for the ' + s.year + ' plan year.'); },
+      metricAreas,
+      resetMetrics: () => { this.setState({ areaMetrics: Object.fromEntries(AREAS.map(a => [a.id, a.metrics.slice()])) }, this.persist); this.toast('Metric lists reset', 'Back to the starter lists.'); },
+      isWhy: s.view === 'why', isPriorities: s.view === 'priorities', isGoalReview: s.view === 'goals',
+      goStep0: () => this.goToStep(0), goStep1: () => this.goToStep(1), goStep2: () => this.goToStep(2), goStep3: () => this.goToStep(3), goStep4: () => this.goToStep(4),
+      goCheckin: () => { this.upd({ view: 'checkin' }); window.scrollTo(0, 0); },
+      goalCards, goalsEmpty: GOALS.length === 0, goalEdit,
+      settingsTitle: isOperator ? 'Plan settings' : 'Priorities',
+      goalsIntro: isOperator ? 'Set 2–4 big goals for the year. Directors set priorities that support them, and every leader sees them at the top of their plan.' : 'The Operator sets these. Every priority you set should support at least one.',
+      canAddGoalOp: isOperator && GOALS.length < 4,
+      addGoalOp: () => this.mutGoals(gs => gs.push({ id: 'g' + Date.now(), statement: '', measure: '', target: '' })),
+      goalCountWarn: GOALS.length < 2, goalCountMsg: isOperator ? (GOALS.length ? 'Add at least one more goal. The plan calls for 2–4.' : 'No goals yet. Add 2–4 before Directors set priorities.') : 'The Operator has not finished setting the ' + year + ' goals yet.',
+      goalReviewIntro: isOperator ? 'Score each goal for the quarter. The rows show how each supporting area priority reported at its check-in.' : 'How each goal is tracking this quarter, based on area check-ins and the Operator\u2019s score.',
+      quarterItems: QS.map(q => ({ id: q, label: q + ' ' + year })), quarter: s.quarter, setQuarter: q => this.upd({ quarter: q }),
+      goalRev,
+      priList, priV, priCount: s.priorities.length,
+      priIntro: isOperator ? 'Directors set priorities for the areas they oversee, and you can edit any of them. Each priority should support at least one goal and have a lead area. Leaders in a lead area must build it out in their plan. Enter the ' + prevYear + ' baseline so leaders can see the gap.'
+        : 'Set priorities for the areas you oversee: ' + listJoin(myAreaNames) + '. Each priority should support at least one goal and have a lead area. Leaders in that area must build it out in their plan. Priorities for other areas are shown read-only.',
+      canAddPri: isOperator || isDirector,
+      addPriority: () => this.mutPri(ps => ps.push({ id: 'p' + Date.now(), name: '', metric: '', baseline: '', target: '', owners: [], goalIds: [], by: me.email || '' })),
+      resetPriorities: () => { this.mutPri(ps => { ps.splice(0, ps.length, ...clone(DEFAULT_PRI)); }); this.toast('Priorities reset', 'Back to the original 8 priorities.'); },
+      isPlan: s.view === 'plan', isCheckin: s.view === 'checkin', isPrint: s.view === 'print', isDash: s.view === 'dash', isReview: s.view === 'review',
+      areaName: area.name, leaderName: isLeader && s.user ? (s.user.name || area.leader) : area.leader, status: p.status, statusTone: STATUS_TONE[p.status],
+      hasFeedback: p.status === 'Needs revision' && !!fb, latestFeedback: fb ? fb.text : '', feedbackTitle: fb ? fb.label + ' feedback' : 'Feedback',
+      steps: STEPS.map((label, i) => ({ n: i + 1, label, bar: i === s.step ? 'var(--cfa-red)' : i < s.step ? 'var(--cfa-navy)' : 'var(--border-default)', numColor: i === s.step ? 'var(--cfa-red)' : 'var(--text-secondary)', weight: i === s.step ? 700 : 500, go: () => this.goToStep(i) })),
+      step0: s.step === 0, step1: s.step === 1, step2: s.step === 2, step3: s.step === 3, step4: s.step === 4,
+      isFirstStep: s.step === 0, notLastStep: s.step < 4,
+      back: () => this.goToStep(Math.max(0, s.step - 1)),
+      next: () => this.goToStep(Math.min(4, s.step + 1)),
+      lesson0: p.lessons[0], lesson1: p.lessons[1], recog: p.recog, sustain: p.sustain, excite: p.excite,
+      onLesson0: this.tx(areaId, (pl, v) => { pl.lessons[0] = v; }), onLesson1: this.tx(areaId, (pl, v) => { pl.lessons[1] = v; }),
+      onRecog: L('recog'), onSustain: L('sustain'), onExcite: L('excite'),
+      goalsV, noItems: p.goals.length === 0,
+      step2Intro: myAssigned.length ? (dn ? dn : 'Your Director') + ' assigned ' + (myAssigned.length === 1 ? 'this priority' : 'these priorities') + ' to ' + area.name + '. Each one supports one or more of the Operator\u2019s goals. Write your own statement for each: action + metric + target + date.'
+        : 'No priorities are assigned to ' + area.name + ' yet. Check with ' + (dn || 'your Director') + ', or add one of your own. Write it as: action + metric + target + date.',
+      canAddOwn: !hasOwn && !LOCKED.includes(p.status),
+      addOwn: () => this.mut(areaId, pl => { pl.goals.push(mk({ priority: 'own' })); if (pl.status === 'Not started') pl.status = 'Draft'; }),
+      checks: checks.map(checkView), cannotSubmit: !complete || LOCKED.includes(p.status),
+      submitLabel: p.status === 'Approved' ? 'Plan Approved' : p.status === 'Director approved' ? 'With the Operator' : p.status === 'Submitted' ? 'Submitted for Review' : 'Submit Plan',
+      submit: () => this.call('submitPlan', { plan: this.state.plans[areaId] }, areaId, () => this.toast('Plan submitted', 'We emailed you a confirmation. ' + (dn || 'Your Director') + ' will review it first.')),
+      goPrint: () => this.upd({ view: 'print' }),
+      doPrint: () => window.print(),
+      ciV, noGoals: p.goals.length === 0, hasGoals: p.goals.length > 0,
+      checkinNote: ci.submitted ? 'Submitted. You can update it until the next quarter opens.' : 'Due the ' + QMONTH[s.quarter] + '.',
+      submitCheckin: () => this.call('submitCheckin', { quarter: s.quarter, plan: this.state.plans[areaId] }, areaId, () => this.toast(s.quarter + ' check-in submitted', 'Thank you. Your numbers are on the dashboard.')),
+      counts: [
+        { n: cnt('Approved'), label: 'Approved', color: 'var(--cfa-green)' },
+        { n: cnt('Director approved'), label: 'Awaiting Operator', color: 'var(--cfa-navy)' },
+        { n: cnt('Submitted'), label: 'Awaiting Director', color: 'var(--cfa-navy)' },
+        { n: cnt('Needs revision'), label: 'Needs revision', color: 'var(--cfa-dark-red)' },
+        { n: cnt('Draft') + cnt('Not started'), label: 'Draft or not started', color: 'var(--text-secondary)' }
+      ],
+      priCards, areaRows,
+      reviewList: AREAS.map(a => ({ name: a.name, status: s.plans[a.id].status, tone: STATUS_TONE[s.plans[a.id].status], bg: a.id === s.reviewArea ? 'var(--surface-subtle)' : 'transparent', weight: a.id === s.reviewArea ? 700 : 500, select: () => this.upd({ reviewArea: a.id, reviewNote: '' }) })),
+      rv, reviewNote: s.reviewNote, onReviewNote: e => this.setState({ reviewNote: e.target.value }),
+      approve: () => this.call('review', { decision: 'Approved', note: s.reviewNote.trim() }, s.reviewArea, () => { this.setState({ reviewNote: '' }); this.toast(isOperator ? 'Plan approved' : 'Sent to the Operator', isOperator ? rA.leader + ' has been emailed.' : 'The Operator has been emailed for final approval.'); }),
+      requestRevision: () => { if (!s.reviewNote.trim()) return; this.call('review', { decision: 'Needs revision', note: s.reviewNote.trim() }, s.reviewArea, () => { this.setState({ reviewNote: '' }); this.toast('Revision requested', rA.leader + ' has been emailed your note.'); }); },
+      hasToast: !!s.toast, toastTitle: s.toast ? s.toast.title : '', toastBody: s.toast ? s.toast.body : '', toastTone: s.toast ? s.toast.tone : 'success', closeToast: () => this.setState({ toast: null }),
+      showGate: s.auth !== 'ready', isReady: s.auth === 'ready', isDenied: s.auth === 'denied', gsiRef: this.gsiRef,
+      gateText: s.auth === 'loading' ? 'Loading your plan…' : s.auth === 'denied' ? 'This account does not have access.' : 'Sign in with your Ft. Totten Google account to continue.',
+      hasAuthError: !!s.authError, authError: s.authError, saving: s.saving, signOut: this.signOut,
+      userName: s.user ? s.user.name || s.user.email : '', userRoleLine: isOperator ? 'Operator' : isDirector ? 'Director' : area.name
+    };
+  }
+}
+</script>
+</body>
+</html>
