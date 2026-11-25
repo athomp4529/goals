@@ -76,7 +76,7 @@
         <div style="display:flex;flex-direction:column;gap:10px;max-width:760px">
           <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">Planning guide</span>
           <h1 style="margin:0;font-size:36px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">Why we plan the way we do</h1>
-          <p style="margin:0;font-size:17px;line-height:1.55;color:var(--text-secondary);text-wrap:pretty">Ten areas run this restaurant. The Operator sets 2–4 big goals for the year. Directors turn those goals into priorities and assign them to each area. You build out the priorities assigned to you, and you can add one of your own. When every area works toward the same goals, guests feel it. This page explains each step of the plan.</p>
+          <p style="margin:0;font-size:17px;line-height:1.55;color:var(--text-secondary);text-wrap:pretty">Ten areas run this restaurant. The Operator sets the big goals for the year. Directors turn those goals into priorities and assign them to each area. You build out the priorities assigned to you, and you can add one of your own. When every area works toward the same goals, guests feel it. This page explains each step of the plan.</p>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:12px">
@@ -1413,10 +1413,10 @@ class Component extends DCLogic {
       goCheckin: () => { this.upd({ view: 'checkin' }); window.scrollTo(0, 0); },
       goalCards, goalsEmpty: GOALS.length === 0, goalEdit,
       settingsTitle: isOperator ? 'Plan settings' : 'Priorities',
-      goalsIntro: isOperator ? 'Set 2–4 big goals for the year. Directors set priorities that support them, and every leader sees them at the top of their plan.' : 'The Operator sets these. Every priority you set should support at least one.',
-      canAddGoalOp: isOperator && GOALS.length < 4,
+      goalsIntro: isOperator ? 'Set the big goals for the year. Directors set priorities that support them, and every leader sees them at the top of their plan.' : 'The Operator sets these. Every priority you set should support at least one.',
+      canAddGoalOp: isOperator,
       addGoalOp: () => this.mutGoals(gs => gs.push({ id: 'g' + Date.now(), statement: '', measure: '', target: '' })),
-      goalCountWarn: GOALS.length < 2, goalCountMsg: isOperator ? (GOALS.length ? 'Add at least one more goal. The plan calls for 2–4.' : 'No goals yet. Add 2–4 before Directors set priorities.') : 'The Operator has not finished setting the ' + year + ' goals yet.',
+      goalCountWarn: GOALS.length < 2, goalCountMsg: isOperator ? (GOALS.length ? 'Add at least one more goal. The plan calls for at least 2.' : 'No goals yet. Add at least 2 before Directors set priorities.') : 'The Operator has not finished setting the ' + year + ' goals yet.',
       goalReviewIntro: isOperator ? 'Score each goal for the quarter. The rows show how each supporting area priority reported at its check-in.' : 'How each goal is tracking this quarter, based on area check-ins and the Operator\u2019s score.',
       quarterItems: QS.map(q => ({ id: q, label: q + ' ' + year })), quarter: s.quarter, setQuarter: q => this.upd({ quarter: q }),
       goalRev,
