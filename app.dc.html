@@ -681,6 +681,62 @@
       </div>
     </sc-if>
 
+    <!-- ============ OPERATOR/DIRECTOR: BY POSITION ============ -->
+    <sc-if value="{{ isRoll }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:32px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">{{ roleEyebrow }}</span>
+          <h1 style="margin:0;font-size:36px;line-height:1.15;font-weight:700;letter-spacing:-0.02em">By position</h1>
+          <span style="font-size:15px;color:var(--text-secondary)">Each Director and Leader, the priorities assigned to them, and the goals those priorities support.</span>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:16px 20px;display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:12px;letter-spacing:.08em;font-weight:500;text-transform:uppercase;color:var(--text-secondary)">{{ year }} Goals</span>
+          <sc-for list="{{ rollGoals }}" as="G" hint-placeholder-count="3">
+            <div style="display:flex;gap:10px;font-size:14px;line-height:1.45"><span style="font-weight:700;color:var(--cfa-red);min-width:56px">{{ G.label }}</span><span>{{ G.text }}</span></div>
+          </sc-for>
+        </div>
+        <sc-for list="{{ rollGroups }}" as="grp" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:12px;letter-spacing:.14em;font-weight:500;text-transform:uppercase;color:var(--cfa-red)">{{ grp.eyebrow }}</span>
+              <h2 style="margin:0;font-size:22px;font-weight:700;letter-spacing:-0.02em">{{ grp.title }}</h2>
+              <span style="font-size:14px;color:var(--text-secondary)">{{ grp.sub }}</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px">
+              <sc-for list="{{ grp.areas }}" as="a" hint-placeholder-count="3">
+                <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column">
+                  <div style="padding:16px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-bottom:1px solid var(--border-subtle)">
+                    <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                      <span style="font-size:16px;font-weight:700">{{ a.name }}</span>
+                      <span style="font-size:13px;color:var(--text-secondary)">Leader: {{ a.leader }}</span>
+                    </div>
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Badge" tone="{{ a.tone }}" hint-size="80px,24px">{{ a.status }}</x-import>
+                  </div>
+                  <sc-for list="{{ a.items }}" as="it" hint-placeholder-count="2">
+                    <div style="padding:12px 20px;display:flex;flex-direction:column;gap:4px;border-bottom:1px solid var(--border-subtle)">
+                      <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline">
+                        <span style="font-size:15px;font-weight:500;line-height:1.35">{{ it.name }}</span>
+                        <span style="font-size:12px;font-weight:500;white-space:nowrap;color:{{ it.srcColor }}">{{ it.src }}</span>
+                      </div>
+                      <span style="font-size:13px;color:var(--text-secondary)">{{ it.target }}</span>
+                      <span style="font-size:13px;font-weight:500;color:var(--cfa-navy)">{{ it.goals }}</span>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ a.empty }}" hint-placeholder-val="{{ false }}">
+                    <span style="padding:14px 20px;font-size:14px;color:var(--cfa-red)">No priorities assigned yet.</span>
+                  </sc-if>
+                  <div style="padding:10px 20px;margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface-subtle)">
+                    <span style="font-size:13px;color:var(--text-secondary)">{{ a.goalSummary }}</span>
+                    <x-import component-from-global-scope="ChickFilADesignSystem_a0dd25.Button" variant="ghost" size="sm" onClick="{{ a.review }}" hint-size="90px,32px">Review</x-import>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
     <!-- ============ OPERATOR: REVIEW ============ -->
     <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
@@ -1342,6 +1398,17 @@ class Component extends DCLogic {
       const pl = s.plans[a.id], ch = checksFor(pl, a.id), ok = ch.filter(c => c.ok).length, lc = latestCi(pl), dn = dirNames(a.id);
       return { name: a.name, leader: a.leader + (dn ? ' · Director: ' + dn : ''), status: pl.status, tone: STATUS_TONE[pl.status], goals: pl.goals.length, score: ok + '/' + ch.length, pct: Math.round(ok / ch.length * 100) + '%', barColor: ok === ch.length ? 'var(--cfa-green)' : ok >= 6 ? 'var(--cfa-navy)' : 'var(--cfa-yellow)', hasCi: !!lc, noCi: !lc, ci: lc ? lc.q + ' · ' + lc.st : '', ciTone: lc ? CI_TONE[lc.st] : 'neutral', review: () => this.upd({ view: 'review', reviewArea: a.id, reviewNote: '' }) };
     });
+    const rollArea = a => {
+      const pl = s.plans[a.id];
+      const asg = assignedTo(a.id).map(pr => { const built = pl.goals.some(g => g.priority === pr.id); return { ids: pr.goalIds || [], name: pr.name || 'Untitled priority', target: [pr.metric, 'Target ' + (pr.target || '—')].filter(Boolean).join(' · '), goals: goalsLine(pr.goalIds), src: built ? 'Built out' : 'Not built out', srcColor: built ? 'var(--cfa-green)' : 'var(--cfa-red)' }; });
+      const own = pl.goals.filter(g => g.priority === 'own').map(g => ({ ids: g.goalIds || [], name: g.statement || 'Own priority (untitled)', target: [g.metric, 'Target ' + (g.target || '—')].filter(Boolean).join(' · '), goals: goalsLine(g.goalIds), src: 'Leader’s own', srcColor: 'var(--cfa-navy)' }));
+      const items = asg.concat(own), gl = Array.from(new Set([].concat(...items.map(x => x.ids)))).map(goalLabel).filter(Boolean);
+      return { name: a.name, leader: a.leader, status: pl.status, tone: STATUS_TONE[pl.status], items, empty: items.length === 0, goalSummary: gl.length ? 'Supports ' + listJoin(gl) : 'No goals linked', review: () => this.upd({ view: 'review', reviewArea: a.id, reviewNote: '' }) };
+    };
+    const rollGoals = GOALS.map((G, k) => ({ label: 'Goal ' + (k + 1), text: [G.statement || 'Untitled', G.target ? 'Target ' + G.target : ''].filter(Boolean).join(' · ') }));
+    const dirList = isDirector ? DIRS.filter(d => d.email === me.email).concat(DIRS.some(d => d.email === me.email) ? [] : [{ name: me.name, email: me.email, areas: myAreas }]) : DIRS;
+    const rollGroups = dirList.map(d => { const ar = AREAS.filter(a => (d.areas || []).includes(a.id)); return { eyebrow: 'Director', title: d.name || d.email, sub: ar.length + ' area' + (ar.length === 1 ? '' : 's') + ' · ' + ar.reduce((n, a) => n + assignedTo(a.id).length, 0) + ' assigned priorities', areas: ar.map(rollArea) }; });
+    if (isOperator) { const rest = AREAS.filter(a => !dirsOf(a.id).length); if (rest.length) rollGroups.push({ eyebrow: 'Reports to Operator', title: 'No Director', sub: 'Plans for these areas go straight to the Operator.', areas: rest.map(rollArea) }); }
     const priCards = PRI.map(pr => {
       const areas = AREAS.filter(a => s.plans[a.id].goals.some(g => g.priority === pr.id)).map(a => a.name);
       const owners = ownersOf(pr), missing = owners.filter(id => s.plans[id] && !s.plans[id].goals.some(g => g.priority === pr.id)).map(id => areaById(id).name);
@@ -1386,7 +1453,7 @@ class Component extends DCLogic {
     };
 
     const tabItems = isLeader ? [{ id: 'why', label: 'Why We Plan' }, { id: 'plan', label: 'My Plan' }, { id: 'checkin', label: 'Quarterly Check-in' }, { id: 'print', label: 'One-Page Plan' }]
-      : [{ id: 'dash', label: 'All Areas' }, { id: 'review', label: 'Review Plans' }, { id: 'goals', label: 'Goal Review' }, { id: 'priorities', label: isOperator ? 'Plan Settings' : 'Priorities' }];
+      : [{ id: 'dash', label: 'All Areas' }, { id: 'roll', label: 'By Position' }, { id: 'review', label: 'Review Plans' }, { id: 'goals', label: 'Goal Review' }, { id: 'priorities', label: isOperator ? 'Plan Settings' : 'Priorities' }];
     const calSorted = s.calendar.map((c, i) => ({ c, i })).sort((a, b) => (a.c.date || '9999').localeCompare(b.c.date || '9999'));
     const calendarV = calSorted.map(({ c }) => ({ dateFmt: c.date ? new Date(c.date + 'T00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Date TBD', label: c.label || '—' }));
     const lastCal = calSorted.length ? calSorted[calSorted.length - 1].c : null;
@@ -1426,7 +1493,7 @@ class Component extends DCLogic {
       canAddPri: isOperator || isDirector,
       addPriority: () => this.mutPri(ps => ps.push({ id: 'p' + Date.now(), name: '', metric: '', baseline: '', target: '', owners: [], goalIds: [], by: me.email || '' })),
       resetPriorities: () => { this.mutPri(ps => { ps.splice(0, ps.length, ...clone(DEFAULT_PRI)); }); this.toast('Priorities reset', 'Back to the original 8 priorities.'); },
-      isPlan: s.view === 'plan', isCheckin: s.view === 'checkin', isPrint: s.view === 'print', isDash: s.view === 'dash', isReview: s.view === 'review',
+      isPlan: s.view === 'plan', isCheckin: s.view === 'checkin', isPrint: s.view === 'print', isDash: s.view === 'dash', isRoll: s.view === 'roll', rollGoals, rollGroups, isReview: s.view === 'review',
       areaName: area.name, leaderName: isLeader && s.user ? (s.user.name || area.leader) : area.leader, status: p.status, statusTone: STATUS_TONE[p.status],
       hasFeedback: p.status === 'Needs revision' && !!fb, latestFeedback: fb ? fb.text : '', feedbackTitle: fb ? fb.label + ' feedback' : 'Feedback',
       steps: STEPS.map((label, i) => ({ n: i + 1, label, bar: i === s.step ? 'var(--cfa-red)' : i < s.step ? 'var(--cfa-navy)' : 'var(--border-default)', numColor: i === s.step ? 'var(--cfa-red)' : 'var(--text-secondary)', weight: i === s.step ? 700 : 500, go: () => this.goToStep(i) })),
